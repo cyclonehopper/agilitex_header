@@ -1,0 +1,194 @@
+---
+format:
+  pdf:
+    pdf-engine: lualatex
+    number-sections: true
+    include-in-header: header.tex
+
+header-includes:
+  - \def\logoCompany{images/logo-bger.png}
+  - \def\logoClient{images/logo-ipl.png}
+  - \def\projTitle{IPL Steam Boiler Study FEL1}
+  - \def\projNo{24177}
+  - \def\client{IPL Phosphate Hill}
+  - \def\calcNumber{24177-ST-CAL-0001}
+  - \def\calcTitle{Donkey Boiler Removal and Piping Support Design}
+  - \def\rev{A}
+  - \def\projPhase{Concept Design}
+  - \def\calcDate{15/01/25}
+
+engine: julia 
+julia: 
+  exeflags: ["--project=@."] 
+  env: ["QUARTO_JULIA_PROJECT=@."]  
+code-overflow: wrap
+---
+
+```{julia}
+#| echo: false
+#| output: false
+using Pkg, Unitful, DataFrames, XLSX, Plots, Unitful.DefaultSymbols, MyUnits
+
+# PackageSpec(path=raw"C:\\Users\\Josua\\Juliarepo\\MyUnits/") 
+```
+ 
+
+# Introduction {#sec-intro}
+
+## Calculation Objective / Scope
+
+The existing boiler is to be removed by lifting it and inserting a skate
+so it can be rolled out.
+
+This calculation presents the FEA of the jacking plates added to the
+boiler frame, and design of piping supports
+
+## Exclusions
+
+This calculation excludes the following: - design of rollers and
+supporting mechanisms
+
+## Basis of Design
+
+In general, design is in accordance with AS 4100 for steel.
+
+## Design Standards and Codes
+
+Unless specifically noted, the design complies with Australian Standards
+and selected international standards as listed in the Design Criteria.
+The following summarizes the key standards used in producing this
+calculation:
+
+-   AS 1170.0 - 2002 Structural design actions - Part 0: General
+    principles
+-   AS 1170.1 - 2002 Structural design actions - Part 1: Permanent,
+    imposed and other actions
+-   AS 1170.2 - 2021 Structural design actions - Part 2: Wind actions
+-   AS 3600 - 2018 Concrete structures
+-   AS 4100 - 1998 Steel structures
+
+## Other Reference Documents
+
+Other reference documents used in this design include:
+
+-   3D laser scan data
+
+{{< pagebreak >}}
+
+# Assumptions
+
+## Holds
+
+-   n/a
+
+## Assumptions {#sec-assumptions}
+
+-   Jacking cylinder dimension, refer [Appendix A](#sec-appendixa), @sec-appendixa
+-   Differential displacement between adjacent jacking point is must be < L/600
+-   centerline of jack is no more than 195mm from edge of bottom frame
+
+## Relied on Information
+
+-   3D scan, site photos
+
+{{< pagebreak >}}
+
+# Methodology
+
+-   Perform member check using Space Gass model, to get sanity check of the member capacity, design load ratio must be less than 1.0
+-   Perform FEA of the jacking point and check for limiting stresses and strains, where applicable. Acceptance criteria as follows
+    - design stress < 0.9Fy, for regions away from geometric discontinuities.
+    - plastic equivalent strain (VM strains) < 5%
+
+# RFEM MODEL OF JACKING PLATES
+
+## Load - Self weight
+
+![Tare weight](images/tare-weight.jpg){#fig-tareweight width="350"}
+
+Boiler weight, as seen in @fig-tareweight, is 
+
+```{julia}
+Geqpt = 32Tonnef |> kN |> f2
+```
+
+![RFEM load application](images/rfem-load.png)
+
+
+![SG load application](images/sg-load.png)
+
+
+
+
+## Load - Jacking load
+
+Load is applied as a differential displacement. The maximum differential is limited to L/600 = 7mm
+
+## Load Combination: 1.35G + 7mm Differential
+
+![Applied Loads - Combined](images/applied-loads.png)
+
+
+{{< pagebreak >}}
+
+## Calculation Results
+
+### Space Gass model
+
+![Member load ratio > 1.0, pass](images/sg-member-design.png)
+
+
+### Jacking plates typical for 3 corners
+
+![Plate thicknesses](images/rfem-plate-thicknesses.png)
+
+![Stress utilization ratio < 1.0, pass](images/rfem-utilization-ratio.png)
+
+### Jacking plates for 1 corner near the new steel columns
+
+![Plate thicknesses](images/plate-thicknesses-1corner.png)
+
+![Stress utilization ratio](images/stress-util-ratio-corner1.png)
+
+![Strain utilization ratio](images/strain-util-ratio-corner1.png)
+
+
+# SPACE GASS MODEL - PIPING SUPPORTS
+
+## Load Q(S) - Services
+
+![](images/piping-loads.png){width="300"}
+
+## Design load ratio > 1.0 Pass
+
+![](images/piping-design-ratio.png){width="300"}
+
+## Chem anchor/base plate design
+
+```{=latex}
+\includepdf[pages=-]{pdf-to-embed/chemset.pdf}
+```
+
+
+{{< pagebreak >}}
+
+# Appendix A {#sec-appendixa}
+
+Enerpac cylinder jack, 20t, dimensions
+
+![](images/enerpac-dim-sketch.png){width="349"}
+
+![](images/enerpac-dim-table.png){width="518"}
+
+
+{{< pagebreak >}}
+
+# Appendix B - Sketches
+
+![Sketch-1/2](images/sketch-1.png)
+
+![Sketch-2/2](images/sketch-2.png)
+
+![Sketch-2/2](images/sketch-3.png)
+
+

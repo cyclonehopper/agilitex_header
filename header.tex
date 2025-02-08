@@ -1,0 +1,61 @@
+% using fancyhdr, create a atabular header 5 rows by 3 columns for 1st row, 4 cols for rows 2 to 5
+
+\usepackage{pdfpages}
+\usepackage{fancyhdr}
+\usepackage{geometry}
+
+% Set page geometry
+\geometry{
+  a4paper,
+  top=10mm, % Top margin remains 12mm
+  bottom=15mm, % Bottom margin remains 12mm
+  left=20mm,  % Changed from 12mm to 20mm for left margin
+  right=15mm, % Right margin remains 12mm 
+  includeheadfoot % Include header and footer in the available space
+}
+
+% Set header height
+\setlength{\headheight}{85pt} % Adjust as needed
+
+% Ensure header occupies full width
+\setlength{\headwidth}{\textwidth}
+\addtolength{\headwidth}{-24mm} % Subtract left and right margins
+
+
+
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancyhead{} % clear all header fields
+\fancyhead[C]{% left header
+\begin{tabular*}{\textwidth}{|l@{\extracolsep{\fill}}c@{\extracolsep{\fill}}r@{\extracolsep{\fill}}r|}
+    \hline
+%  first row
+\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{\logoCompany}} & \multicolumn{2}{c}{\textbf{\fontsize{24}{29}\selectfont Calculation Sheet}} & \raisebox{-0.5\height}{\includegraphics[height=1.5cm]{\logoClient}}\\ \hline
+% 2nd row
+\multicolumn{1}{|l|}{\textbf{\fontsize{9}{11}\selectfont Project Title}} & 
+    \multicolumn{1}{l}{\fontsize{9}{11}\selectfont \projTitle} & 
+    \multicolumn{1}{|l|}{\textbf{\fontsize{9}{11}\selectfont Project No.}} & 
+    \multicolumn{1}{l|}{\fontsize{9}{11}\selectfont \projNo} \\ \cline{1-4}
+
+% 3rd row
+\multicolumn{1}{|l|}{\textbf{\fontsize{9}{11}\selectfont Client}} & 
+    \multicolumn{1}{l}{\fontsize{9}{11}\selectfont \client} & 
+    \multicolumn{1}{|l|}{\textbf{\fontsize{9}{11}\selectfont Calculation No.}} & 
+    \multicolumn{1}{l|}{\fontsize{9}{11}\selectfont \calcNumber} \\ \cline{1-4}
+ 
+%  4th row
+\multicolumn{1}{|l|}{\textbf{\fontsize{9}{11}\selectfont Calculation Title}} & 
+\multicolumn{1}{l}{\fontsize{9}{11}\selectfont \calcTitle} & 
+\multicolumn{1}{|l|}{\textbf{\fontsize{9}{11}\selectfont Revision}} & 
+\multicolumn{1}{l|}{\fontsize{9}{11}\selectfont \rev} \\ \cline{1-4}
+
+%  5th row
+\multicolumn{1}{|p{27mm}|}{\textbf{\fontsize{9}{11}\selectfont Project Phase}} & 
+    \multicolumn{1}{l}{\fontsize{9}{11}\selectfont \projPhase} & 
+    \multicolumn{1}{|p{25mm}|}{\textbf{\fontsize{9}{11}\selectfont Date}} & 
+    \multicolumn{1}{p{25mm}|}{\fontsize{9}{11}\selectfont \calcDate} \\ \cline{1-4}
+
+\end{tabular*}
+}
+ 
