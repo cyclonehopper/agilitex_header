@@ -2,21 +2,39 @@
 format:
   pdf:
     pdf-engine: lualatex
-    number-sections: true
+    number-sections: true 
     include-in-header: header.tex
+    filters:
+      - revision-filter.lua
+    revisions:
+    - revNo: A
+      revDate: 15/01/25
+      revDesc: IFIR
+      revAuthor: JOSUA A.
+      revCheck: x.y.
+      revApp:  
+
+    - revNo: B
+      revDate: 25/01/25
+      revDesc: IFIR
+      revAuthor: JOSUA A.
+      revCheck: x.y.
+      revApp: x.y.z
+
 
 header-includes:
+  - \def\companyName{Agilitus Qld}
   - \def\logoCompany{images/logo-bger.png}
   - \def\logoClient{images/logo-ipl.png}
   - \def\projTitle{IPL Steam Boiler Study FEL1}
   - \def\projNo{24177}
   - \def\client{IPL Phosphate Hill}
   - \def\calcNumber{24177-ST-CAL-0001}
-  - \def\calcTitle{Donkey Boiler Removal and Piping Support Design}
-  - \def\rev{A}
-  - \def\projPhase{Concept Design}
-  - \def\calcDate{15/01/25}
+  - \def\calcTitle{Donkey Boiler}
+  - \def\projPhase{Concept Design} 
 
+
+ 
 engine: julia 
 julia: 
   exeflags: ["--project=@."] 
@@ -27,11 +45,59 @@ code-overflow: wrap
 ```{julia}
 #| echo: false
 #| output: false
+using Pkg
+```
+```{julia}
+#| echo: false
+#| output: false
+Pkg.activate(".")
 using Pkg, Unitful, DataFrames, XLSX, Plots, Unitful.DefaultSymbols, MyUnits
 
 # PackageSpec(path=raw"C:\\Users\\Josua\\Juliarepo\\MyUnits/") 
+``` 
+
+```{=latex}
+\textbf{\fontsize{14pt}{30pt}\selectfont Calculation Objective / Scope} \\
+\noindent\rule{\textwidth}{1pt}
 ```
- 
+* Assumption 1
+* Assumption 2
+* ...
+
+
+```{=latex}
+\textbf{\fontsize{14pt}{30pt}\selectfont Calculation Assumptions} \\
+\noindent\rule{\textwidth}{1pt}
+```
+- assumption 1
+- assumption 2
+
+```{=latex}
+\textbf{\fontsize{14pt}{30pt}\selectfont Software Used} \\
+\noindent\rule{\textwidth}{1pt}
+```
+* Space Gass
+* RFEM
+* ...
+
+```{=latex}
+\textbf{\fontsize{14pt}{30pt}\selectfont Holds} \\
+\noindent\rule{\textwidth}{1pt}
+```
+* n/a 
+
+
+
+
+{{< pagebreak >}}
+
+<!-- add TOC using latex -->
+```{=latex}
+\tableofcontents
+```
+
+{{< pagebreak >}}
+
 
 # Introduction {#sec-intro}
 
@@ -104,64 +170,7 @@ Other reference documents used in this design include:
 
 ## Load - Self weight
 
-![Tare weight](images/tare-weight.jpg){#fig-tareweight width="350"}
-
-Boiler weight, as seen in @fig-tareweight, is 
-
-```{julia}
-Geqpt = 32Tonnef |> kN |> f2
-```
-
-![RFEM load application](images/rfem-load.png)
-
-
-![SG load application](images/sg-load.png)
-
-
-
-
-## Load - Jacking load
-
-Load is applied as a differential displacement. The maximum differential is limited to L/600 = 7mm
-
-## Load Combination: 1.35G + 7mm Differential
-
-![Applied Loads - Combined](images/applied-loads.png)
-
-
 {{< pagebreak >}}
-
-## Calculation Results
-
-### Space Gass model
-
-![Member load ratio > 1.0, pass](images/sg-member-design.png)
-
-
-### Jacking plates typical for 3 corners
-
-![Plate thicknesses](images/rfem-plate-thicknesses.png)
-
-![Stress utilization ratio < 1.0, pass](images/rfem-utilization-ratio.png)
-
-### Jacking plates for 1 corner near the new steel columns
-
-![Plate thicknesses](images/plate-thicknesses-1corner.png)
-
-![Stress utilization ratio](images/stress-util-ratio-corner1.png)
-
-![Strain utilization ratio](images/strain-util-ratio-corner1.png)
-
-
-# SPACE GASS MODEL - PIPING SUPPORTS
-
-## Load Q(S) - Services
-
-![](images/piping-loads.png){width="300"}
-
-## Design load ratio > 1.0 Pass
-
-![](images/piping-design-ratio.png){width="300"}
 
 ## Chem anchor/base plate design
 
@@ -169,26 +178,11 @@ Load is applied as a differential displacement. The maximum differential is limi
 \includepdf[pages=-]{pdf-to-embed/chemset.pdf}
 ```
 
-
 {{< pagebreak >}}
+
 
 # Appendix A {#sec-appendixa}
 
-Enerpac cylinder jack, 20t, dimensions
-
-![](images/enerpac-dim-sketch.png){width="349"}
-
-![](images/enerpac-dim-table.png){width="518"}
 
 
 {{< pagebreak >}}
-
-# Appendix B - Sketches
-
-![Sketch-1/2](images/sketch-1.png)
-
-![Sketch-2/2](images/sketch-2.png)
-
-![Sketch-2/2](images/sketch-3.png)
-
-
