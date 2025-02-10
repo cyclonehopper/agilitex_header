@@ -1,4 +1,10 @@
 ---
+engine: julia 
+julia: 
+  exeflags: ["--project=@."] 
+  env: ["QUARTO_JULIA_PROJECT=@."]  
+code-overflow: wrap
+
 format:
   pdf:
     pdf-engine: lualatex
@@ -6,40 +12,25 @@ format:
     include-in-header: header.tex
     filters:
       - revision-filter.lua
-    revisions:
-    - revNo: A
-      revDate: 15/01/25
-      revDesc: IFIR
-      revAuthor: JOSUA A.
-      revCheck: x.y.
-      revApp:  
-
-    - revNo: B
-      revDate: 25/01/25
-      revDesc: IFIR
-      revAuthor: JOSUA A.
-      revCheck: x.y.
-      revApp: x.y.z
-
 
 header-includes:
   - \def\companyName{Agilitus Qld}
   - \def\logoCompany{images/logo-bger.png}
-  - \def\logoClient{images/logo-ipl.png}
-  - \def\projTitle{IPL Steam Boiler Study FEL1}
-  - \def\projNo{24177}
   - \def\client{IPL Phosphate Hill}
+  - \def\logoClient{images/logo-ipl.png}
+  - \def\projNo{24177}
+  - \def\projTitle{IPL Steam Boiler Study FEL1}
   - \def\calcNumber{24177-ST-CAL-0001}
   - \def\calcTitle{Donkey Boiler}
   - \def\projPhase{Concept Design} 
 
-
- 
-engine: julia 
-julia: 
-  exeflags: ["--project=@."] 
-  env: ["QUARTO_JULIA_PROJECT=@."]  
-code-overflow: wrap
+revisions:
+  - revNo: A
+    revDate: 15/01/25
+    revDesc: IFIR
+    revAuthor: JOSUA A.
+    revCheck: x.y.
+    revApp: 
 ---
 
 ```{julia}
