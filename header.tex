@@ -6,6 +6,7 @@
 \usepackage{array}
 \usepackage{graphicx}
 \usepackage{afterpage}
+\usepackage{tabularx}
 
 % Set page geometry for whole document
 \geometry{
@@ -22,7 +23,7 @@
 
 % Ensure header occupies full width
 \setlength{\headwidth}{\textwidth}
-\addtolength{\headwidth}{-24mm}
+% \addtolength{\headwidth}{-35mm}
 
 \pagestyle{fancy}
 \renewcommand{\headrulewidth}{0pt}
@@ -30,7 +31,7 @@
 \fancyhead{} % clear all header fields
 
 \fancyhead[C]{%
-  \begin{tabular*}{\textwidth}{|l@{\extracolsep{\fill}}c@{\extracolsep{\fill}}r@{\extracolsep{\fill}}r|}
+  \begin{tabularx}{\textwidth}{|l|X|l|l|}
     \hline
     %  first row
     \raisebox{-0.5\height}{\includegraphics[height=1.5cm]{\logoCompany}} & 
@@ -56,19 +57,20 @@
     \multicolumn{1}{l|}{\fontsize{9}{11}\selectfont \revNo} \\ 
     \cline{1-4}
     %  5th row
-    \multicolumn{1}{|p{27mm}|}{\textbf{\fontsize{9}{11}\selectfont Project Phase}} & 
-    \multicolumn{1}{l}{\fontsize{9}{11}\selectfont \projPhase} & 
+    \multicolumn{1}{|p{30mm}|}{\textbf{\fontsize{9}{11}\selectfont Project Phase}} & 
+    \multicolumn{1}{X}{\fontsize{9}{11}\selectfont \projPhase} & 
     \multicolumn{1}{|p{25mm}|}{\textbf{\fontsize{9}{11}\selectfont Date}} & 
     \multicolumn{1}{p{25mm}|}{\fontsize{9}{11}\selectfont \calcDate} \\ 
     \cline{1-4}
-  \end{tabular*}%
+  \end{tabularx}%
 }  
 
 % Define a custom page style for the first page, which includes the revision table
 
 \fancypagestyle{firstpage}{  
     \fancyfoot[C]{% 
-        \begin{tabular*}{\textwidth}{|p{8mm}|p{15mm}|c|p{20mm}|p{20mm}|p{20mm}|}
+      \noindent\begin{minipage}{\linewidth}
+        \begin{tabularx}{\headwidth}{|c|c|X|c|c|c|}
             \hline
             \multicolumn{1}{|>{\columncolor{black}\color{white}}l|}{\textbf{\fontsize{9}{11}\selectfont Rev.}} & 
             \multicolumn{1}{>{\columncolor{black}\color{white}}l|}{\textbf{\fontsize{9}{11}\selectfont Date}} & 
@@ -78,13 +80,13 @@
             \multicolumn{1}{>{\columncolor{black}\color{white}}l|}{\textbf{\fontsize{9}{11}\selectfont Approved}} \\ 
             \revisionData
             % \hline
-        \end{tabular*}
+        \end{tabularx}
 
         % add following disclaimer: 
         \vskip 2mm
-        \begin{minipage}{\textwidth}
             \fontsize{8}{11}\selectfont This calculation was prepared by \companyName\ pursuant to the Engineering Services Contract between \companyName\ and \client\ in connection with the services for \projTitle.
-        \end{minipage}
+            % \fontsize{8}{11}\selectfont This calculation was prepared by \the\headwidth\ pursuant to the Engineering Services Contract between \the\linewidth\ and \client\ in connection with the services for \projTitle.
+      \end{minipage}
     } 
 }
 

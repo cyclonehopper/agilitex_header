@@ -12,10 +12,11 @@ function Meta(meta)
             tex_commands = tex_commands .. string.format(
                 "\\multicolumn{1}{|p{8mm}|}{\\fontsize{9}{11}\\selectfont %s} & \n" ..
                 "\\multicolumn{1}{p{15mm}|}{\\fontsize{9}{11}\\selectfont %s} & \n" ..
-                "\\multicolumn{1}{p{\\dimexpr\\textwidth-94mm}}{\\fontsize{9}{11}\\selectfont %s} & \n" ..
-                "\\multicolumn{1}{|l|}{\\fontsize{9}{11}\\selectfont %s} & \n" ..
-                "\\multicolumn{1}{l|}{\\fontsize{9}{11}\\selectfont %s} & \n" ..
-                "\\multicolumn{1}{l|}{\\fontsize{9}{11}\\selectfont %s} \\\\\n",
+                -- "\\multicolumn{1}{l@{\\extracolsep{\\fill}}|}{\\fontsize{9}{11}\\selectfont %s} & \n" ..
+                "\\multicolumn{1}{X|}{\\fontsize{9}{11}\\selectfont %s} & \n" ..
+                "\\multicolumn{1}{p{20mm}|}{\\fontsize{9}{11}\\selectfont %s} & \n" ..
+                "\\multicolumn{1}{p{20mm}|}{\\fontsize{9}{11}\\selectfont %s} & \n" ..
+                "\\multicolumn{1}{p{20mm}|}{\\fontsize{9}{11}\\selectfont %s} \\\\\n",
                 pandoc.utils.stringify(rev.revNo or ""), 
                 pandoc.utils.stringify(rev.revDate or ""),
                 pandoc.utils.stringify(rev.revDesc or ""),

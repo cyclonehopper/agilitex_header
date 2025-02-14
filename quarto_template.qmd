@@ -5,6 +5,9 @@ julia:
   env: ["QUARTO_JULIA_PROJECT=@."]  
 code-overflow: wrap
 
+mainfont: Lato
+fontsize: 11pt
+
 format:
   pdf:
     pdf-engine: lualatex
@@ -12,6 +15,8 @@ format:
     include-in-header: header.tex
     filters:
       - revision-filter.lua
+    monofont: Lato
+    monofontoptions: "Scale=0.8"
 
 header-includes:
   - \def\companyName{Agilitus Qld}
