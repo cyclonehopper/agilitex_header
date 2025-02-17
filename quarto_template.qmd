@@ -15,12 +15,12 @@ format:
     include-in-header: header.tex
     filters:
       - revision-filter.lua
-    monofont: Lato
-    monofontoptions: "Scale=0.8"
+    monofont: Source Code Pro
+    monofontoptions: "Scale=0.7"
 
 header-includes:
   - \def\companyName{Agilitus Qld}
-  - \def\logoCompany{images/logo-bger.png}
+  - \def\logoCompany{C:/Users/Josua/Juliarepo/agilitex_header/images/logo-agilitus.png}
   - \def\client{IPL Phosphate Hill}
   - \def\logoClient{images/logo-ipl.png}
   - \def\projNo{24177}
