@@ -47,7 +47,8 @@ using Pkg
 #| echo: false
 #| output: false
 Pkg.activate(".")
-using Pkg, Unitful, DataFrames, XLSX, Plots, Unitful.DefaultSymbols, MyUnits
+using Pkg, Unitful, DataFrames, XLSX, Plots, Unitful.DefaultSymbols, Revise
+using  MyUnits
 
 # PackageSpec(path=raw"C:\\Users\\Josua\\Juliarepo\\MyUnits/") 
 ``` 
