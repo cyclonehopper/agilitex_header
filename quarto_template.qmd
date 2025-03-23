@@ -1,8 +1,10 @@
 ---
 engine: julia 
 julia: 
-  exeflags: ["--project=@."] 
+  exeflags: ["--project=@.", "--compiled-modules=yes"]  
   env: ["QUARTO_JULIA_PROJECT=@."]  
+  cache: true
+
 code-overflow: wrap
 
 mainfont: Lato
