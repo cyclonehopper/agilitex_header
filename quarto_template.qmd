@@ -3,7 +3,8 @@ engine: julia
 julia: 
   exeflags: ["--project=@.", "--compiled-modules=yes"]  
   env: ["QUARTO_JULIA_PROJECT=@."]  
-  cache: true
+
+cache: true
 
 code-overflow: wrap
 
