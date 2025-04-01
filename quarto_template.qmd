@@ -1,5 +1,8 @@
 ---
 engine: julia 
+execute:
+  daemon: 3600
+  cache: true
 julia: 
   exeflags: ["--project=@.", "--compiled-modules=yes"]  
   env: ["QUARTO_JULIA_PROJECT=@."]  
