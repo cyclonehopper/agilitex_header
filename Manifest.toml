@@ -2,7 +2,7 @@
 
 julia_version = "1.11.4"
 manifest_format = "2.0"
-project_hash = "d9bae7eed421a1eaab3ca74884b95a9cbb93b19c"
+project_hash = "d299ef043b1eb07ddb1b026948a4a83a324e28ce"
 
 [[deps.AISC360]]
 deps = ["MaterialModule", "MyUnits", "Pkg", "PyCall", "Test", "Unitful"]
@@ -1134,6 +1134,12 @@ deps = ["Dates"]
 git-tree-sha1 = "3bac05bc7e74a75fd9cba4295cde4045d9fe2386"
 uuid = "6c6a2e73-6563-6170-7368-637461726353"
 version = "1.2.1"
+
+[[deps.SeismicLoadModule]]
+deps = ["Interpolations", "MyUnits", "Test", "Unitful"]
+path = "C:\\Users\\Josua\\Juliarepo\\SeismicLoadModule\\"
+uuid = "94718750-5767-429d-bcd9-d2322fe0b9ca"
+version = "0.1.0"
 
 [[deps.SentinelArrays]]
 deps = ["Dates", "Random"]

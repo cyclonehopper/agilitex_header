@@ -54,10 +54,12 @@ using Pkg
 #| output: false
 Pkg.activate(".")
 using Pkg, Unitful, DataFrames, XLSX, Plots, Unitful.DefaultSymbols, Revise
-using  MyUnits, MyHelper
-
 # PackageSpec(path=raw"C:\\Users\\Josua\\Juliarepo\\MyUnits/") 
 ``` 
+
+```{julia}
+using  MyUnits, MyHelper, WindLoadModule, SeismicLoadModule
+```
 
 ```{=latex}
 \textbf{\fontsize{14pt}{30pt}\selectfont Calculation Objective / Scope} \\
