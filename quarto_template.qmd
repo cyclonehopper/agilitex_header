@@ -58,6 +58,8 @@ using Pkg, Unitful, DataFrames, XLSX, Plots, Unitful.DefaultSymbols, Revise
 ``` 
 
 ```{julia}
+#| echo: false
+#| output: false
 using  MyUnits, MyHelper, WindLoadModule, SeismicLoadModule
 ```
 
