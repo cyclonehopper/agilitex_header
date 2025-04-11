@@ -96,6 +96,18 @@
 % how to show the remaineder of the pages without the footer, and new bottom margin 
 
 
- 
+% set the appendix header formatting 
+\newcommand{\appendixHeader}[1]{
+     \begin{center}
+     \vspace*{1cm}
+     \textbf{\fontsize{24pt}{30pt}\selectfont #1} \\
+     \end{center}
+  }
 
+% set the calc coverpage section header formatting
+\newcommand{\coverpageHeader}[1]{
+    \vspace*{0.5cm}
+    \textbf{\fontsize{14pt}{1pt}\selectfont #1} \\
+    \noindent\rule{\textwidth}{1pt}
+  }
 

@@ -63,34 +63,28 @@ using Pkg, Unitful, DataFrames, XLSX, Plots, Unitful.DefaultSymbols, Revise
 using  MyUnits, MyHelper, WindLoadModule, SeismicLoadModule
 ```
 
+
 ```{=latex}
-\textbf{\fontsize{14pt}{30pt}\selectfont Calculation Objective / Scope} \\
-\noindent\rule{\textwidth}{1pt}
+\coverpageHeader{Calculation Objective / Scope}
 ```
-* Assumption 1
-* Assumption 2
-* ...
+* Design slab foundation common to both donkey boiler and stack
+* Design slab foundation common to both donkey boiler and stack
 
 
 ```{=latex}
-\textbf{\fontsize{14pt}{30pt}\selectfont Calculation Assumptions} \\
-\noindent\rule{\textwidth}{1pt}
+\coverpageHeader{Calculation Assumptions} 
 ```
-- assumption 1
-- assumption 2
+- Soil spring based on 150kPa/20mm stiffness
 
 ```{=latex}
-\textbf{\fontsize{14pt}{30pt}\selectfont Software Used} \\
-\noindent\rule{\textwidth}{1pt}
+\coverpageHeader{Software Used} 
 ```
-* Space Gass
 * RFEM
-* ...
 
 ```{=latex}
-\textbf{\fontsize{14pt}{30pt}\selectfont Holds} \\
-\noindent\rule{\textwidth}{1pt}
-```
+\coverpageHeader{Holds} 
+``` 
+
 * n/a 
 
 
@@ -187,9 +181,8 @@ Other reference documents used in this design include:
 
 {{< pagebreak >}}
 
-
-# Appendix A {#sec-appendixa}
-
-
+ ```{=latex }
+ \appendixHeader{Appendix B}
+ ``` 
 
 {{< pagebreak >}}
