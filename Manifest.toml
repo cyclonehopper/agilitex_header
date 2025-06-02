@@ -2,7 +2,7 @@
 
 julia_version = "1.11.5"
 manifest_format = "2.0"
-project_hash = "d299ef043b1eb07ddb1b026948a4a83a324e28ce"
+project_hash = "89472bc34f52d1a3fc756e1f461da6b02e69a37e"
 
 [[deps.AISC360]]
 deps = ["MaterialModule", "MyUnits", "Pkg", "PyCall", "Test", "Unitful"]
@@ -386,6 +386,12 @@ deps = ["Artifacts", "Bzip2_jll", "Expat_jll", "FreeType2_jll", "JLLWrappers", "
 git-tree-sha1 = "301b5d5d731a0654825f1f2e906990f7141a106b"
 uuid = "a3f928ae-7b40-5064-980b-68af3947d34b"
 version = "2.16.0+0"
+
+[[deps.FootingModule]]
+deps = ["ConcreteModule", "DataFrames", "LinearAlgebra", "MyHelper", "MyUnits", "Plots", "QuadGK", "Revise", "Test", "Trapz", "Unitful", "XLSX"]
+path = "C:\\Users\\Josua\\Juliarepo\\FootingModule\\"
+uuid = "04027866-d2ca-4827-9b4a-a7396ae7f615"
+version = "0.1.0"
 
 [[deps.Format]]
 git-tree-sha1 = "9c68794ef81b08086aeb32eeaf33531668d5f5fc"
@@ -1005,6 +1011,18 @@ git-tree-sha1 = "2766344a35a1a5ec1147305c4b343055d7c22c90"
 uuid = "e99dba38-086e-5de3-a5b1-6e4c66e897c3"
 version = "6.8.2+0"
 
+[[deps.QuadGK]]
+deps = ["DataStructures", "LinearAlgebra"]
+git-tree-sha1 = "9da16da70037ba9d701192e27befedefb91ec284"
+uuid = "1fd47b50-473d-5c70-9696-f719f8f3bcdc"
+version = "2.11.2"
+
+    [deps.QuadGK.extensions]
+    QuadGKEnzymeExt = "Enzyme"
+
+    [deps.QuadGK.weakdeps]
+    Enzyme = "7da242da-08ed-463a-9acd-ee780be4f1d9"
+
 [[deps.QuartoNotebookRunner]]
 deps = ["BSON", "Base64", "CommonMark", "Compat", "Dates", "IOCapture", "InteractiveUtils", "IterTools", "JSON3", "Logging", "Pkg", "PrecompileTools", "Preferences", "ProgressLogging", "REPL", "Random", "RelocatableFolders", "SHA", "Sockets", "TOML", "YAML"]
 git-tree-sha1 = "94a4a9ef9ee5b22b5ea01215f749114f5cf9e220"
@@ -1295,6 +1313,11 @@ version = "1.11.0"
 git-tree-sha1 = "0c45878dcfdcfa8480052b6ab162cdd138781742"
 uuid = "3bb67fe8-82b1-5028-8e26-92a6c54297fa"
 version = "0.11.3"
+
+[[deps.Trapz]]
+git-tree-sha1 = "79eb0ed763084a3e7de81fe1838379ac6a23b6a0"
+uuid = "592b5752-818d-11e9-1e9a-2b8ca4a44cd1"
+version = "2.0.3"
 
 [[deps.URIs]]
 git-tree-sha1 = "cbbebadbcc76c5ca1cc4b4f3b0614b3e603b5000"
