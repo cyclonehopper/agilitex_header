@@ -1,15 +1,10 @@
 ---
-engine: julia 
 execute:
   daemon: 3600
   cache: true
+
 julia: 
-  exeflags: ["--project=@.", "--compiled-modules=yes"]  
-  env: ["QUARTO_JULIA_PROJECT=@."]  
-
-cache: true
-
-code-overflow: wrap
+  exeflags: ["--project=.julia"]  
 
 mainfont: Lato
 fontsize: 11pt
@@ -18,10 +13,10 @@ format:
   pdf:
     pdf-engine: lualatex
     number-sections: true 
-    include-in-header: header.tex
+    include-in-header: .julia/header.tex
     filters:
-      - revision-filter.lua
-    monofont: DejaVu Sans Mono
+      - .julia/revision-filter.lua
+    monofont: Julia Mono
     monofontoptions: "Scale=0.8"
 
 header-includes:
@@ -43,30 +38,6 @@ revisions:
     revCheck: x.y.
     revApp: 
 ---
-
-```{julia}
-#| label: Pkg
-#| echo: false
-#| output: false
-using Pkg
-```
-
-```{julia}
-#| label: activate
-#| echo: false
-#| output: false
-Pkg.activate(".")
-using Pkg, Unitful, DataFrames, XLSX, Plots, Unitful.DefaultSymbols, Revise
-# PackageSpec(path=raw"C:\\Users\\Josua\\Juliarepo\\MyUnits/") 
-``` 
-
-```{julia}
-#| label: using
-#| echo: false
-#| output: false
-using MyUnits, MyHelper, WindLoadModule, SeismicLoadModule, FootingModule, ConcreteModule
-```
-
 
 ```{=latex}
 \coverpageHeader{Calculation Objective / Scope}
@@ -90,8 +61,6 @@ using MyUnits, MyHelper, WindLoadModule, SeismicLoadModule, FootingModule, Concr
 ``` 
 
 * n/a 
-
-
 
 
 {{< pagebreak >}}
@@ -170,6 +139,30 @@ Other reference documents used in this design include:
 -   Perform FEA of the jacking point and check for limiting stresses and strains, where applicable. Acceptance criteria as follows
     - design stress < 0.9Fy, for regions away from geometric discontinuities.
     - plastic equivalent strain (VM strains) < 5%
+
+
+```{julia}
+#| label: Pkg
+#| echo: false
+#| output: false
+using Pkg
+```
+
+```{julia}
+#| label: activate
+#| echo: false
+#| output: false
+Pkg.activate(".")
+using Pkg, Unitful, DataFrames, XLSX, Plots, Unitful.DefaultSymbols, Revise
+# PackageSpec(path=raw"C:\\Users\\Josua\\Juliarepo\\MyUnits/") 
+``` 
+
+```{julia}
+#| label: using
+#| echo: false
+#| output: false
+using MyUnits, MyHelper, WindLoadModule, SeismicLoadModule, FootingModule, ConcreteModule
+```
 
 # RFEM MODEL OF JACKING PLATES
 
