@@ -183,3 +183,9 @@ using MyUnits, MyHelper, WindLoadModule, SeismicLoadModule, FootingModule, Concr
  ``` 
 
 {{< pagebreak >}}
+
+
+ ```{=latex }
+\appendixHeader{Appendix A  \\ Preliminary Pump Information}
+\addcontentsline{toc}{section}{Appendix A - Preliminary Pump Information}
+ ``` 
