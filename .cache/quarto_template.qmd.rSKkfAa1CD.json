@@ -7,17 +7,14 @@
             },
             "source": [
                 "---\n",
-                "engine: julia \n",
                 "execute:\n",
                 "  daemon: 3600\n",
                 "  cache: true\n",
+                "\n",
                 "julia: \n",
-                "  exeflags: [\"--project=@.\", \"--compiled-modules=yes\"]  \n",
-                "  env: [\"QUARTO_JULIA_PROJECT=@.\"]  \n",
-                "\n",
-                "cache: true\n",
-                "\n",
-                "code-overflow: wrap\n",
+                "  exeflags: [\"--project=.julia\", \"--compiled-modules=yes\"]  \n",
+                "  env: [\"QUARTO_JULIA_PROJECT=.julia\"]   \n",
+                "  \n",
                 "\n",
                 "mainfont: Lato\n",
                 "fontsize: 11pt\n",
@@ -26,10 +23,10 @@
                 "  pdf:\n",
                 "    pdf-engine: lualatex\n",
                 "    number-sections: true \n",
-                "    include-in-header: header.tex\n",
+                "    include-in-header: .julia/header.tex\n",
                 "    filters:\n",
-                "      - revision-filter.lua\n",
-                "    monofont: Source Code Pro\n",
+                "      - .julia/revision-filter.lua\n",
+                "    monofont: Julia Mono\n",
                 "    monofontoptions: \"Scale=0.8\"\n",
                 "\n",
                 "header-includes:\n",
@@ -50,115 +47,30 @@
                 "    revAuthor: JOSUA A.\n",
                 "    revCheck: x.y.\n",
                 "    revApp: \n",
-                "---"
-            ]
-        },
-        {
-            "id": "2",
-            "cell_type": "code",
-            "metadata": {
-            },
-            "source": [
-                "#| echo: false\n",
-                "#| output: false\n",
-                "using Pkg"
-            ],
-            "outputs": [
-            ],
-            "execution_count": 1
-        },
-        {
-            "id": "3",
-            "cell_type": "markdown",
-            "metadata": {
-            },
-            "source": [
-            ]
-        },
-        {
-            "id": "4",
-            "cell_type": "code",
-            "metadata": {
-            },
-            "source": [
-                "#| echo: false\n",
-                "#| output: false\n",
-                "Pkg.activate(\".\")\n",
-                "using Pkg, Unitful, DataFrames, XLSX, Plots, Unitful.DefaultSymbols, Revise\n",
-                "# PackageSpec(path=raw\"C:\\\\Users\\\\Josua\\\\Juliarepo\\\\MyUnits/\")"
-            ],
-            "outputs": [
-                {
-                    "output_type": "stream",
-                    "name": "stdout",
-                    "text": "\u001b[32m\u001b[1m  Activating\u001b[22m\u001b[39m project at `C:\\Users\\Josua\\Juliarepo\\agilitex_header`\n"
-                }
-            ],
-            "execution_count": 1
-        },
-        {
-            "id": "5",
-            "cell_type": "markdown",
-            "metadata": {
-            },
-            "source": [
-            ]
-        },
-        {
-            "id": "6",
-            "cell_type": "code",
-            "metadata": {
-            },
-            "source": [
-                "using  MyUnits, MyHelper, WindLoadModule, SeismicLoadModule"
-            ],
-            "outputs": [
-                {
-                    "output_type": "stream",
-                    "name": "stdout",
-                    "text": "\u001b[92m\u001b[1mPrecompiling\u001b[22m\u001b[39m SeismicLoadModule...\n   1055.4 ms\u001b[32m  ✓ \u001b[39mSeismicLoadModule\n  1 dependency successfully precompiled in 1 seconds. 37 already precompiled.\n"
-                }
-            ],
-            "execution_count": 1
-        },
-        {
-            "id": "7",
-            "cell_type": "markdown",
-            "metadata": {
-            },
-            "source": [
+                "---\n",
                 "\n",
                 "```{=latex}\n",
-                "\\textbf{\\fontsize{14pt}{30pt}\\selectfont Calculation Objective / Scope} \\\\\n",
-                "\\noindent\\rule{\\textwidth}{1pt}\n",
+                "\\coverpageHeader{Calculation Objective / Scope}\n",
                 "```\n",
-                "* Assumption 1\n",
-                "* Assumption 2\n",
-                "* ...\n",
+                "* Design slab foundation common to both donkey boiler and stack\n",
+                "* Design slab foundation common to both donkey boiler and stack\n",
                 "\n",
                 "\n",
                 "```{=latex}\n",
-                "\\textbf{\\fontsize{14pt}{30pt}\\selectfont Calculation Assumptions} \\\\\n",
-                "\\noindent\\rule{\\textwidth}{1pt}\n",
+                "\\coverpageHeader{Calculation Assumptions} \n",
                 "```\n",
-                "- assumption 1\n",
-                "- assumption 2\n",
+                "- Soil spring based on 150kPa/20mm stiffness\n",
                 "\n",
                 "```{=latex}\n",
-                "\\textbf{\\fontsize{14pt}{30pt}\\selectfont Software Used} \\\\\n",
-                "\\noindent\\rule{\\textwidth}{1pt}\n",
+                "\\coverpageHeader{Software Used} \n",
                 "```\n",
-                "* Space Gass\n",
                 "* RFEM\n",
-                "* ...\n",
                 "\n",
                 "```{=latex}\n",
-                "\\textbf{\\fontsize{14pt}{30pt}\\selectfont Holds} \\\\\n",
-                "\\noindent\\rule{\\textwidth}{1pt}\n",
-                "```\n",
+                "\\coverpageHeader{Holds} \n",
+                "``` \n",
+                "\n",
                 "* n/a \n",
-                "\n",
-                "\n",
                 "\n",
                 "\n",
                 "{{< pagebreak >}}\n",
@@ -220,8 +132,7 @@
                 "-   n/a\n",
                 "\n",
                 "## Assumptions {#sec-assumptions}\n",
-                "\n",
-                "-   Jacking cylinder dimension, refer [Appendix A](#sec-appendixa), @sec-appendixa\n",
+                " \n",
                 "-   Differential displacement between adjacent jacking point is must be < L/600\n",
                 "-   centerline of jack is no more than 195mm from edge of bottom frame\n",
                 "\n",
@@ -237,8 +148,122 @@
                 "-   Perform FEA of the jacking point and check for limiting stresses and strains, where applicable. Acceptance criteria as follows\n",
                 "    - design stress < 0.9Fy, for regions away from geometric discontinuities.\n",
                 "    - plastic equivalent strain (VM strains) < 5%\n",
+                ""
+            ]
+        },
+        {
+            "id": "2",
+            "cell_type": "code",
+            "metadata": {
+            },
+            "source": [
+                "#| label: activate\n",
+                "#| echo: false\n",
+                "#| output: false\n",
+                "using Pkg\n",
+                "Pkg.activate(\".julia\")\n",
+                "using Unitful, DataFrames, XLSX, Plots, Unitful.DefaultSymbols, Revise\n",
+                "using MyUnits, MyHelper, WindLoadModule, SeismicLoadModule, FootingModule, ConcreteModule\n",
                 "\n",
-                "# RFEM MODEL OF JACKING PLATES\n",
+                "# PackageSpec(path=raw\"C:\\\\Users\\\\Josua\\\\Juliarepo\\\\MyUnits/\")"
+            ],
+            "outputs": [
+                {
+                    "output_type": "stream",
+                    "name": "stdout",
+                    "text": "\u001b[32m\u001b[1m  Activating\u001b[22m\u001b[39m project at `C:\\Users\\Josua\\Juliarepo\\agilitex_header\\.julia`\n"
+                }
+            ],
+            "execution_count": 1
+        },
+        {
+            "id": "3",
+            "cell_type": "markdown",
+            "metadata": {
+            },
+            "source": [
+            ]
+        },
+        {
+            "id": "4",
+            "cell_type": "code",
+            "metadata": {
+            },
+            "source": [
+                "#| label: using\n",
+                "#| echo: false\n",
+                "#| output: false"
+            ],
+            "outputs": [
+            ],
+            "execution_count": 1
+        },
+        {
+            "id": "5",
+            "cell_type": "markdown",
+            "metadata": {
+            },
+            "source": [
+                "\n",
+                "# RFEM MODEL OF JACKING PLATES"
+            ]
+        },
+        {
+            "id": "6",
+            "cell_type": "code",
+            "metadata": {
+            },
+            "source": [
+                "5m + 6m"
+            ],
+            "outputs": [
+                {
+                    "output_type": "execute_result",
+                    "execution_count": 1,
+                    "data": {
+                        "text/plain": "11 m"
+                    },
+                    "metadata": {
+                    }
+                }
+            ],
+            "execution_count": 1
+        },
+        {
+            "id": "7",
+            "cell_type": "markdown",
+            "metadata": {
+            },
+            "source": [
+            ]
+        },
+        {
+            "id": "8",
+            "cell_type": "code",
+            "metadata": {
+            },
+            "source": [
+                "5kN + 6kN"
+            ],
+            "outputs": [
+                {
+                    "output_type": "execute_result",
+                    "execution_count": 1,
+                    "data": {
+                        "text/plain": "11 kN"
+                    },
+                    "metadata": {
+                    }
+                }
+            ],
+            "execution_count": 1
+        },
+        {
+            "id": "9",
+            "cell_type": "markdown",
+            "metadata": {
+            },
+            "source": [
                 "\n",
                 "## Load - Self weight\n",
                 "\n",
@@ -252,16 +277,21 @@
                 "\n",
                 "{{< pagebreak >}}\n",
                 "\n",
+                " ```{=latex }\n",
+                " \\appendixHeader{Appendix B}\n",
+                " ``` \n",
                 "\n",
-                "# Appendix A {#sec-appendixa}\n",
+                "{{< pagebreak >}}\n",
                 "\n",
                 "\n",
-                "\n",
-                "{{< pagebreak >}}"
+                " ```{=latex }\n",
+                "\\appendixHeader{Appendix A  \\\\ Preliminary Pump Information}\n",
+                "\\addcontentsline{toc}{section}{Appendix A - Preliminary Pump Information}\n",
+                " ```"
             ]
         }
     ],
-    "timestamp": "2025-04-10T18:21:50.67",
+    "timestamp": "2025-06-11T19:50:59.878",
     "file": "C:\\Users\\Josua\\Juliarepo\\agilitex_header\\quarto_template.qmd",
     "qnr_schema_version": "1.0.0"
 }

@@ -4,7 +4,9 @@ execute:
   cache: true
 
 julia: 
-  exeflags: ["--project=.julia"]  
+  exeflags: ["--project=.julia", "--compiled-modules=yes"]  
+  env: ["QUARTO_JULIA_PROJECT=.julia"]   
+  
 
 mainfont: Lato
 fontsize: 11pt
@@ -122,8 +124,7 @@ Other reference documents used in this design include:
 -   n/a
 
 ## Assumptions {#sec-assumptions}
-
--   Jacking cylinder dimension, refer [Appendix A](#sec-appendixa), @sec-appendixa
+ 
 -   Differential displacement between adjacent jacking point is must be < L/600
 -   centerline of jack is no more than 195mm from edge of bottom frame
 
@@ -142,18 +143,14 @@ Other reference documents used in this design include:
 
 
 ```{julia}
-#| label: Pkg
-#| echo: false
-#| output: false
-using Pkg
-```
-
-```{julia}
 #| label: activate
 #| echo: false
 #| output: false
-Pkg.activate(".")
-using Pkg, Unitful, DataFrames, XLSX, Plots, Unitful.DefaultSymbols, Revise
+using Pkg
+Pkg.activate(".julia")
+using Unitful, DataFrames, XLSX, Plots, Unitful.DefaultSymbols, Revise
+using MyUnits, MyHelper, WindLoadModule, SeismicLoadModule, FootingModule, ConcreteModule
+
 # PackageSpec(path=raw"C:\\Users\\Josua\\Juliarepo\\MyUnits/") 
 ``` 
 
@@ -161,10 +158,17 @@ using Pkg, Unitful, DataFrames, XLSX, Plots, Unitful.DefaultSymbols, Revise
 #| label: using
 #| echo: false
 #| output: false
-using MyUnits, MyHelper, WindLoadModule, SeismicLoadModule, FootingModule, ConcreteModule
 ```
 
 # RFEM MODEL OF JACKING PLATES
+
+```{julia}
+5m + 6m
+```
+
+```{julia}
+5kN + 6kN
+```
 
 ## Load - Self weight
 
