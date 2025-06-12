@@ -1,0 +1,297 @@
+{
+    "cells": [
+        {
+            "id": "1",
+            "cell_type": "markdown",
+            "metadata": {
+            },
+            "source": [
+                "---\n",
+                "execute:\n",
+                "  daemon: 3600\n",
+                "  cache: true\n",
+                "\n",
+                "julia: \n",
+                "  exeflags: [\"--project=julia\", \"--compiled-modules=yes\"]  \n",
+                "  env: [\"QUARTO_JULIA_PROJECT=julia\"]   \n",
+                "  \n",
+                "\n",
+                "mainfont: Lato\n",
+                "fontsize: 11pt\n",
+                "\n",
+                "format:\n",
+                "  pdf:\n",
+                "    pdf-engine: lualatex\n",
+                "    number-sections: true \n",
+                "    include-in-header: julia/header.tex\n",
+                "    filters:\n",
+                "      - julia/revision-filter.lua\n",
+                "    monofont: Julia Mono\n",
+                "    monofontoptions: \"Scale=0.8\"\n",
+                "\n",
+                "header-includes:\n",
+                "  - \\def\\companyName{Agilitus Qld}\n",
+                "  - \\def\\logoCompany{C:/Users/Josua/Juliarepo/agilitex_header/images/logo-agilitus.png}\n",
+                "  - \\def\\client{IPL Phosphate Hill}\n",
+                "  - \\def\\logoClient{images/logo-ipl.png}\n",
+                "  - \\def\\projNo{24177}\n",
+                "  - \\def\\projTitle{IPL Steam Boiler Study FEL1}\n",
+                "  - \\def\\calcNumber{24177-ST-CAL-0001}\n",
+                "  - \\def\\calcTitle{Donkey Boiler}\n",
+                "  - \\def\\projPhase{Concept Design} \n",
+                "\n",
+                "revisions:\n",
+                "  - revNo: A\n",
+                "    revDate: 15/01/25\n",
+                "    revDesc: IFIR\n",
+                "    revAuthor: JOSUA A.\n",
+                "    revCheck: x.y.\n",
+                "    revApp: \n",
+                "---\n",
+                "\n",
+                "```{=latex}\n",
+                "\\coverpageHeader{Calculation Objective / Scope}\n",
+                "```\n",
+                "* Design slab foundation common to both donkey boiler and stack\n",
+                "* Design slab foundation common to both donkey boiler and stack\n",
+                "\n",
+                "\n",
+                "```{=latex}\n",
+                "\\coverpageHeader{Calculation Assumptions} \n",
+                "```\n",
+                "- Soil spring based on 150kPa/20mm stiffness\n",
+                "\n",
+                "```{=latex}\n",
+                "\\coverpageHeader{Software Used} \n",
+                "```\n",
+                "* RFEM\n",
+                "\n",
+                "```{=latex}\n",
+                "\\coverpageHeader{Holds} \n",
+                "``` \n",
+                "\n",
+                "* n/a \n",
+                "\n",
+                "\n",
+                "{{< pagebreak >}}\n",
+                "\n",
+                "<!-- add TOC using latex -->\n",
+                "```{=latex}\n",
+                "\\tableofcontents\n",
+                "```\n",
+                "\n",
+                "{{< pagebreak >}}\n",
+                "\n",
+                "\n",
+                "# Introduction {#sec-intro}\n",
+                "\n",
+                "## Calculation Objective / Scope\n",
+                "\n",
+                "The existing boiler is to be removed by lifting it and inserting a skate\n",
+                "so it can be rolled out.\n",
+                "\n",
+                "This calculation presents the FEA of the jacking plates added to the\n",
+                "boiler frame, and design of piping supports\n",
+                "\n",
+                "## Exclusions\n",
+                "\n",
+                "This calculation excludes the following: - design of rollers and\n",
+                "supporting mechanisms\n",
+                "\n",
+                "## Basis of Design\n",
+                "\n",
+                "In general, design is in accordance with AS 4100 for steel.\n",
+                "\n",
+                "## Design Standards and Codes\n",
+                "\n",
+                "Unless specifically noted, the design complies with Australian Standards\n",
+                "and selected international standards as listed in the Design Criteria.\n",
+                "The following summarizes the key standards used in producing this\n",
+                "calculation:\n",
+                "\n",
+                "-   AS 1170.0 - 2002 Structural design actions - Part 0: General\n",
+                "    principles\n",
+                "-   AS 1170.1 - 2002 Structural design actions - Part 1: Permanent,\n",
+                "    imposed and other actions\n",
+                "-   AS 1170.2 - 2021 Structural design actions - Part 2: Wind actions\n",
+                "-   AS 3600 - 2018 Concrete structures\n",
+                "-   AS 4100 - 1998 Steel structures\n",
+                "\n",
+                "## Other Reference Documents\n",
+                "\n",
+                "Other reference documents used in this design include:\n",
+                "\n",
+                "-   3D laser scan data\n",
+                "\n",
+                "{{< pagebreak >}}\n",
+                "\n",
+                "# Assumptions\n",
+                "\n",
+                "## Holds\n",
+                "\n",
+                "-   n/a\n",
+                "\n",
+                "## Assumptions {#sec-assumptions}\n",
+                " \n",
+                "-   Differential displacement between adjacent jacking point is must be < L/600\n",
+                "-   centerline of jack is no more than 195mm from edge of bottom frame\n",
+                "\n",
+                "## Relied on Information\n",
+                "\n",
+                "-   3D scan, site photos\n",
+                "\n",
+                "{{< pagebreak >}}\n",
+                "\n",
+                "# Methodology\n",
+                "\n",
+                "-   Perform member check using Space Gass model, to get sanity check of the member capacity, design load ratio must be less than 1.0\n",
+                "-   Perform FEA of the jacking point and check for limiting stresses and strains, where applicable. Acceptance criteria as follows\n",
+                "    - design stress < 0.9Fy, for regions away from geometric discontinuities.\n",
+                "    - plastic equivalent strain (VM strains) < 5%\n",
+                ""
+            ]
+        },
+        {
+            "id": "2",
+            "cell_type": "code",
+            "metadata": {
+            },
+            "source": [
+                "#| label: activate\n",
+                "#| echo: false\n",
+                "#| output: false\n",
+                "using Pkg\n",
+                "Pkg.activate(\"julia\")\n",
+                "using Unitful, DataFrames, XLSX, Plots, Unitful.DefaultSymbols, Revise\n",
+                "using MyUnits, MyHelper, WindLoadModule, SeismicLoadModule, FootingModule, ConcreteModule\n",
+                "\n",
+                "# PackageSpec(path=raw\"C:\\\\Users\\\\Josua\\\\Juliarepo\\\\MyUnits/\")"
+            ],
+            "outputs": [
+                {
+                    "output_type": "stream",
+                    "name": "stdout",
+                    "text": "\u001b[32m\u001b[1m  Activating\u001b[22m\u001b[39m project at `C:\\Users\\Josua\\Juliarepo\\agilitex_header\\julia`\n"
+                }
+            ],
+            "execution_count": 1
+        },
+        {
+            "id": "3",
+            "cell_type": "markdown",
+            "metadata": {
+            },
+            "source": [
+            ]
+        },
+        {
+            "id": "4",
+            "cell_type": "code",
+            "metadata": {
+            },
+            "source": [
+                "#| label: using\n",
+                "#| echo: false\n",
+                "#| output: false"
+            ],
+            "outputs": [
+            ],
+            "execution_count": 1
+        },
+        {
+            "id": "5",
+            "cell_type": "markdown",
+            "metadata": {
+            },
+            "source": [
+                "\n",
+                "# RFEM MODEL OF JACKING PLATES"
+            ]
+        },
+        {
+            "id": "6",
+            "cell_type": "code",
+            "metadata": {
+            },
+            "source": [
+                "5m + 6m"
+            ],
+            "outputs": [
+                {
+                    "output_type": "execute_result",
+                    "execution_count": 1,
+                    "data": {
+                        "text/plain": "11 m"
+                    },
+                    "metadata": {
+                    }
+                }
+            ],
+            "execution_count": 1
+        },
+        {
+            "id": "7",
+            "cell_type": "markdown",
+            "metadata": {
+            },
+            "source": [
+            ]
+        },
+        {
+            "id": "8",
+            "cell_type": "code",
+            "metadata": {
+            },
+            "source": [
+                "5kN + 6kN"
+            ],
+            "outputs": [
+                {
+                    "output_type": "execute_result",
+                    "execution_count": 1,
+                    "data": {
+                        "text/plain": "11 kN"
+                    },
+                    "metadata": {
+                    }
+                }
+            ],
+            "execution_count": 1
+        },
+        {
+            "id": "9",
+            "cell_type": "markdown",
+            "metadata": {
+            },
+            "source": [
+                "\n",
+                "## Load - Self weight\n",
+                "\n",
+                "{{< pagebreak >}}\n",
+                "\n",
+                "## Chem anchor/base plate design\n",
+                "\n",
+                "```{=latex}\n",
+                "\\includepdf[pages=-]{pdf-to-embed/chemset.pdf}\n",
+                "```\n",
+                "\n",
+                "{{< pagebreak >}}\n",
+                "\n",
+                " ```{=latex }\n",
+                " \\appendixHeader{Appendix B}\n",
+                " ``` \n",
+                "\n",
+                "{{< pagebreak >}}\n",
+                "\n",
+                "\n",
+                " ```{=latex }\n",
+                "\\appendixHeader{Appendix A  \\\\ Preliminary Pump Information}\n",
+                "\\addcontentsline{toc}{section}{Appendix A - Preliminary Pump Information}\n",
+                " ```"
+            ]
+        }
+    ],
+    "timestamp": "2025-06-12T09:57:16.2",
+    "file": "C:\\Users\\Josua\\Juliarepo\\agilitex_header\\quarto_template.qmd",
+    "qnr_schema_version": "1.0.0"
+}

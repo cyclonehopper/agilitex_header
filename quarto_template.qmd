@@ -4,8 +4,8 @@ execute:
   cache: true
 
 julia: 
-  exeflags: ["--project=.julia", "--compiled-modules=yes"]  
-  env: ["QUARTO_JULIA_PROJECT=.julia"]   
+  exeflags: ["--project=julia", "--compiled-modules=yes"]  
+  env: ["QUARTO_JULIA_PROJECT=julia"]   
   
 
 mainfont: Lato
@@ -15,9 +15,9 @@ format:
   pdf:
     pdf-engine: lualatex
     number-sections: true 
-    include-in-header: .julia/header.tex
+    include-in-header: julia/header.tex
     filters:
-      - .julia/revision-filter.lua
+      - julia/revision-filter.lua
     monofont: Julia Mono
     monofontoptions: "Scale=0.8"
 
@@ -147,7 +147,7 @@ Other reference documents used in this design include:
 #| echo: false
 #| output: false
 using Pkg
-Pkg.activate(".julia")
+Pkg.activate("julia")
 using Unitful, DataFrames, XLSX, Plots, Unitful.DefaultSymbols, Revise
 using MyUnits, MyHelper, WindLoadModule, SeismicLoadModule, FootingModule, ConcreteModule
 
