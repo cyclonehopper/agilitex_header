@@ -4,7 +4,7 @@ execute:
   cache: true
 
 julia: 
-  exeflags: ["--project=julia" ]    
+  exeflags: ["--project=julia"]    
   
 
 mainfont: Lato
