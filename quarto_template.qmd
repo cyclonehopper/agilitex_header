@@ -148,9 +148,6 @@ Other reference documents used in this design include:
 #| output: false
 using Pkg
 Pkg.activate(".")
-using Unitful, DataFrames, XLSX, Plots, Unitful.DefaultSymbols, Revise
-using MyUnits, MyHelper, WindLoadModule, SeismicLoadModule, FootingModule, ConcreteModule
-
 # PackageSpec(path=raw"C:\\Users\\Josua\\Juliarepo\\MyUnits/") 
 ``` 
 
@@ -158,6 +155,8 @@ using MyUnits, MyHelper, WindLoadModule, SeismicLoadModule, FootingModule, Concr
 #| label: using
 #| echo: false
 #| output: false
+using Unitful, DataFrames, XLSX, Plots, Unitful.DefaultSymbols, Revise
+using MyUnits, MyHelper, WindLoadModule, SeismicLoadModule, FootingModule, ConcreteModule
 ```
 
 # RFEM MODEL OF JACKING PLATES
