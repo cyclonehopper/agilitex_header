@@ -1,299 +1,46 @@
----
-title: Wobbler Station Steel and Concrete Design
-format:
-  engformat-typst:
-    company: Agilitus
-    proj_no: 23259
-    calc_no: 23259-ST-CAL-0086
-    proj_title:  Aurukun Bauxite Project
-    client: Glencore
-    proj_phase: FEED Design
-# provide logos for the company (top LHS of header) and optionally the client (top RHS)
-# Note that using _ in the file names appears to give errors.
-    logo_company: "images/logo-agilitus.png"
-    logo_client: "images/logo-aurukun.jpg"
+# Strip footing (B1 => x-axis)
 
-  # provide a list of revisions, in descending order (e.g. add new revisions at the bottom)
-    revisions:
-    - rev_no: A
-      rev_date: 13/05/2025
-      rev_desc: IFR
-      rev_prep: Josua A.
-      rev_check: K. Koops
-      rev_app:           
 
-engine: julia 
-execute:
-  daemon: 3600
-  cache: true
-julia: 
-  exeflags: ["--project=@."]  
-  env: ["QUARTO_JULIA_PROJECT=@."]  
----
+## Load combinations
 
 ```{julia}
-#| echo: false
-#| output: false
-using Pkg
-```
-
-```{julia}
-#| echo: false
-#| output: false
-Pkg.activate(".")
-using Pkg, Unitful, DataFrames, XLSX, Plots, Unitful.DefaultSymbols, Revise
-# PackageSpec(path=raw"C:\\Users\\Josua\\Juliarepo\\MyUnits/") 
-``` 
-
-```{julia}
-#| echo: false
-#| output: false
-using MyUnits, MyHelper, WindLoadModule, SeismicLoadModule, FootingModule, ConcreteModule
-```
-
-```{=typst}
-#like_header("Calculation Objective / Scope")
-```
-
-- Design the rejects conveyor steel and concrete
-
-```{=typst}
-#like_header("Calculation Assumptions")
-```
-- Allowable bearing pressure is 150kPa, founding depth at very stiff soil layer
-- weight of soil overburden is 18kN/m^3 (for stability calculation)
-- Backfill friction angle is 30deg (stability calculations)
-- 
-
-```{=typst}
-#like_header("Software Used")
-```
-
-* Space Gass
-
-```{=typst}
-#like_header("Holds")
-```
-
-* n/a
-
-{{< pagebreak >}}
-
-```{=typst}
-#block(above: 2em, below: 2em)[
-    #outline(
-      title: [Table of Contents],
-      depth: 2,
-      indent: auto
-    );
-    ]
-```
-
-{{< pagebreak >}}
-
-
-# Loads
-
-
-## Dead load (DL) - Structural
-
-- handrail, 0.15kN/m
-- grating, GTX-505025HR, 41kg/m^2
-
-```{julia}
-#| label: grating
-γgr = 21kgf / m^2 |> kPa
-```
-
-```{julia}
-[1.0, 1.2]m .* γgr .|> kN / m .|> f2
-```
-
-## DL - mechanical
-
-weight of flangs + valves, assume
-
-```{julia}
-Gmech = 150kgf |> kN
-```
-
-## Floor live load (QL) 
-
-Otherwise, 2.5kPa
-
-
-## Container load, operating (QBO)
-
-![Material load](images/Qbo_info.png){#fig-tank_load}
-
-```{julia}
-#| label: QBO
-γoper = 1220kgf / m^3
-γsanded = 2000kgf / m^3
-
-OD = 4.5m
-OD_bot = 1m
-A1 = π / 4 * OD^2
-A2 = π / 4 * OD_bot^2
-
-vVol = [A1 * 2m, 0.5 * (A1 + A2) * 2m]
-vZcl = 3641mm .+ [1, -1 / 3 * 2]m
-QBO_tank = sum(vVol) * γoper |> kN
-```
-
-
-```{julia}
-#| label: COG
-
-Zcog = sum(vVol .* vZcl) / sum(vVol)
-
-```
-
-
-
-## Container load, Upset (QBO)
-
-refer @fig-tank_load, for condition of upset load
-
-```{julia} 
-# hopper volume taken as sanded, the rest nominal, refer LC email
-QBU_tank = sum(vVol .* [γoper, γsanded]) |> kN
-```
-
-## Services
-
-```{julia}
-#| label: DN630
-# dead weight of PE100 DN630
-Qs_630 = (154kgf / m + γoper * π / 4 * (630mm)^2) * 6m |> kN
-```
-
-```{julia}
-#| label: DN400
-# dead weight of PE100 DN400
-Qs_630 = (63kgf / m + γoper * π / 4 * (406mm)^2) * 6m |> kN
-```
-
-## Wind load - X
-
-wind parameters
-```{julia}
-#| label: wind param
-# Vo = operating wind speed
-
-wp = AS1170WindParam(; Ruls=500yrs, Rsls=25yrs, Region="C", href=8m, cat=2.0, Ms=1.0, Mt=1.0, Vo=20m / s)
-printlnstruct(wp)
-```
-
-uls wind pressure
-```{julia}
-# uls wind pressure
-pu = wp.pressure
-```
-
-scaling factor for operating wind
-
-```{julia}
-wp.ψw_oper
-```
-
-### wind on tank
- 
-```{julia}
-Ap = 4.5m * 2m + 0.5 * 2m * 4.5m
-Cd = 1.2
-
-Fw_tank = Ap * Cd * pu |> kN
-```
-
-### Wind on pipe (feed) 
-
-```{julia}
-Cd = 1.2
-Fw_pipe = sum([630mm, 400mm, 400mm] .* (Cd * pu * 3m)) |> kN
-```
-
-### Wind on O/F pipe
-
-```{julia}
-Cd = 1.2
-Fw_pipe = 610mm * Cd * pu |> kN / m
-```
-
-### Wind on rolled/open sections 
-
-```{julia}
-Cfig = 2.05
-bm = [200, 250]mm # tube diameters
-vFw_opensec = [fWindForceOpenSec(wp, _bm; Cfig_overide=Cfig) for _bm in bm]
-DataFrame(Member_D=bm, Wind_load=vFw_opensec, Wind_load_shielded=0.2 * vFw_opensec)
-```
-
- 
-
-## Seismic spectral acceleration
-
-```{julia}
-Z = 0.09 # from deisgn criteria
-kp = 1.0
-RockType = "Ce"  # stiff soil formation
-μdivSp = 2.6 # concentric braced frame
-
-eq_params = AS1170SeismicParams(Z, kp, μdivSp, RockType; hn=8.0m)
-ah = fa_spec_coef(params=eq_params)
-```
-
-# Foundation Design
-
-## load combinations
-
-```{julia}
-uls_cases = vcat(101:299) #uls cases
-permissible_cases = vcat(401:401) # PERMISSIBLE cases
+uls_cases = vcat(101:199) #uls cases
+permissible_cases = vcat(201:204) # PERMISSIBLE cases
 
 # excel file output from SG model reactions
-filename = "\\xlsx\\reactions.XLSX"
+filename = "\\xlsx\\reactions.xlsx"
 current_dir = dirname(@__FILE__)
 filepathname = current_dir * filename;
 ```
 
-## Soil parameters
+## Standard pedestal, SQ460
 
 ```{julia}
-# allowable bearing
-q_all = 150kPa
-# WEIGHT OF SOIL
-γs = 18.0kN / m^3;
+b = 460mm
+D = b
+db = 16mm
+Ab = π / 4 * db^2
+n_all_around = 4
 
-ϕn = 1.0
-ϕd = 0.9
-ϕuϕ = 0.85
-ϕsoilbase = 30.0°;
-ϕfill = 30°;
+dtie = 10mm # assume 2 ties only
+Asv_per_tiespacing = 2 * π / 4 * dtie^2 / 300mm |> mm^2 / mm
 
-backfill = Soil_AS4678(γs, ϕfill, ϕn, ϕd, ϕuϕ);
-foundation = Soil_AS4678(γs, ϕsoilbase, ϕn, ϕd, ϕuϕ);
-```
-
-## 600 circular pedestal
-
-```{julia}
+d = D - 50mm - 1.5 * db - dtie
 fc = 32MPa
 fy = 500MPa
-db = 24mm
-Abar = π / 4 * db^2
-D = 600mm
-d = D - 50mm - 12mm - db / 2
-
-Asv_per_tiespacing = 2 * π / 4 * (10mm)^2 / 250mm |> f2
-
-p600 = AS3600ColCircSection(8, Abar, D, d, fc, fy, Asv_per_tiespacing, isbundled=false);
-p600.concrete_section.plot_section(filename="images/ped_D600.png");
+rc_sq500 = AS3600RectSection(n_all_around, Ab, b, d, D, fc, fy, Asv_per_tiespacing)
 ```
 
-![](images/ped_D600.png){width="300"}
+```{julia}
+#| echo: false
+#| output: false
+rc_sq500.concrete_section.plot_section(filename="images/sq500.png");
+```
 
-## Reinforced 300 slab, N20-200; moment capacity
+![](images/sq500.png)
+
+
+## Reinforced 300 slab, N16-200; moment capacity
 
 ```{julia}
 D = 300mm
@@ -312,197 +59,77 @@ rc_slab = AS3600RectSection(fc=fc, fy=fy, b=1m, d=d, D=D, nbb=5, Abb=Ast);
 
 ```{julia}
 #| echo: false
-rc_slab.concrete_section.plot_section(filename="images/footing_cross_section_rc_slab.png");
+rc_slab.concrete_section.plot_section(filename="images/rc_slab.png");
 ```
 
-![](images/footing_cross_section_rc_slab.png){width="300"}
+![](images/rc_slab.png){width="300"}
 
 ```{julia}
 Mdes_rc_slab, str_o = fdesign_beam_moment(rc_slab)
 println(str_o)
 ```
 
-## FOOTING - PAD OPTION
 
 ### Foundation parameters
 
-```{julia} 
-# pedestal size
-c1 = 0.60m
-
-# footing slab length, axis-1, 2 direction 
-B1 = 2.1m
-B2 = B1
-
-D = rc_slab.D
-Df = 9040mm - 8020mm # depth to footing underside
-hs = Df - D # height of soil overburden 
-hp = Df - D + 930mm # height of pedestal
-# pedestal location 
-ped1 = CircularPedestal(p600, hp, 0.0m, 0.0m, nodenum=3)
-
-slab = FootingSlab(B1, B2, rc_slab);
-vped = [ped1]
-raft = RaftFootingRect(vped, slab, Df)
-plot(getFootingGeomVectors(raft), label="", aspect_ratio=:equal, size=(500, 500 / 1.6))
-```
-
-```{julia}
-#| echo: false
-#| output: false
-printlnstruct(raft)
-```
-
-
-### ULS BEARING PRESSURE
-
-```{julia}
-pqx11, pqx22, calcdetails_qmax = check_bearing_pressure(filepathname, raft, backfill, uls_cases,
-    isZup=true,
-    isULS=true,
-    isFrustumVol=true);
-pqx22
-```
-
-```{julia}
-pqx11
-```
-
-```{julia}
-println(calcdetails_qmax)
-```
-
-### PERMISSIBLE BEARING PRESSURE
-
-```{julia}
-pqx11, pqx22, calcdetails_qmax = check_bearing_pressure(filepathname, raft, backfill, permissible_cases,
-    isZup=true,
-    isULS=false,
-    isFrustumVol=false);
-pqx22
-```
-
-```{julia}
-pqx11
-```
-
-```{julia}
-println(calcdetails_qmax)
-```
-
-### ULS SLIDING CHECK
-
-```{julia}
-str_out = check_sliding(filepathname, raft, backfill, foundation, uls_cases, isZup=true,
-    isAdhesion=false,
-    Gext=0.0kN,
-    withPassive=true,
-    isFrustumVol=true);
-println(str_out)
-```
-
-### moment diagram
-```{julia}
-p11, p22, stro = check_bending_diagram_raft(filepathname, raft, backfill, uls_cases,
-    ; isZup=true,
-    isULS=true,
-    isIgnoreMinAst=true,
-    isFrustumVol=true)
-p22
-```
-
-```{julia}
-p11
-```
-
-```{julia} 
-display(println(stro))
-```
-
-### Shear Diagram
-
-```{julia}
-plot_v = check_shear_diagram(raft, backfill, uls_cases,
-    ; filePathName=filepathname,
-    isZup=true,
-    isULS=true,
-    isFrustumVol=true)
-```
-
-### Punching Shear
-
-```{julia}
-str_o = check_punching(raft, uls_cases, ; isZup=true, filepathname=filepathname)
-println(str_o)
-```
-
-
-### Pedestal beam shear
-
-```{julia}
-str = check_pedestal(filepathname, raft, uls_cases, ; isZup=true)
-println(str)
-```
-
-### MTO, for comparison
-
-```{julia}
-Vol_pad = raft.volume
-```
-
-
-## FOOTING - STRIP OPTION (B1 => x-axis)
-
-### Load combinations, ignore wind-y
-
-Combinations involving wind-y is ignored; these shall be considered in design of strip footing along direction 2
-
-```{julia}
-uls_cases = vcat(101:130, 132, 134:142, 144, 146:199) #uls cases
-permissible_cases = vcat(401:401) # PERMISSIBLE cases
-```
-
-### Foundation parameters
-
-```{julia} 
-# pedestal size
-c1 = 0.60m
-
-# footing slab length, axis-1, 2 direction 
-sp = 3.32m
-ae = 0.7m
+```{julia}  
+sp = 0.7m
+ae = 0.9m
 B1 = sp + 2 * ae
-B2 = 1.4m
+B2 = 1.0m
 
 D = rc_slab.D
-Df = 9040mm - 8020mm # depth to footing underside
+Df = 1.0m # depth to footing underside
 hs = Df - D # height of soil overburden 
-hp = Df - D + 930mm # height of pedestal
+hp = Df - D + 300mm # height of pedestal
+
 # pedestal location 
 e11 = -B1 / 2 + ae
 e12 = e11 + sp
-ped11 = CircularPedestal(p600, hp, e11, 0.0m, nodenum=3)
-ped12 = CircularPedestal(p600, hp, e12, 0.0m, nodenum=7)
+
+ped11 = RectanglePedestal(rc_sq500, hp, e11; nodenum=1)
+ped12 = RectanglePedestal(rc_sq500, hp, e12; nodenum=5)
 
 slab = FootingSlab(B1, B2, rc_slab);
 vped = [ped11, ped12]
 raft = RaftFootingRect(vped, slab, Df)
-plot(getFootingGeomVectors(raft), label="", aspect_ratio=:equal, size=(500, 500 / 1.6))
+fg=plot_footing_geom(raft)
+plot!(fg, aspect_ratio=:equal )
+# plot(getFootingGeomVectors(raft), label="", aspect_ratio=:equal, size=(500, 500 / 1.6))
 ```
 
 ```{julia}
 #| echo: false
 #| output: false
-printlnstruct(raft)
+struct_to_dict(raft)
 ```
 
 
-### ULS BEARING PRESSURE
+## Soil parameters
+
+```{julia}
+# allowable bearing
+q_all = 100kPa
+# WEIGHT OF SOIL
+γs = 18.0kN / m^3;
+
+ϕn = 1.0
+ϕd = 0.9
+ϕuϕ = 0.85
+ϕsoilbase = 30.0°;
+ϕfill = 30°;
+
+backfill = Soil_AS4678(γs, ϕfill, ϕn, ϕd, ϕuϕ);
+foundation = Soil_AS4678(γs, ϕsoilbase, ϕn, ϕd, ϕuϕ);
+```
+
+
+## ULS bearing pressure
 
 ```{julia}
 pqx11, pqx22, calcdetails_qmax = check_bearing_pressure(filepathname, raft, backfill, uls_cases,
     isZup=true,
-    isULS=true,
+    ψG=0.9,
     isFrustumVol=true);
 pqx11
 ```
@@ -515,12 +142,12 @@ pqx22
 println(calcdetails_qmax)
 ```
 
-### PERMISSIBLE BEARING PRESSURE
+## SLS bearing pressure
 
 ```{julia}
 pqx11, pqx22, calcdetails_qmax = check_bearing_pressure(filepathname, raft, backfill, permissible_cases,
     isZup=true,
-    isULS=false,
+    ψG=0.9,
     isFrustumVol=false);
 pqx11
 ```
@@ -533,7 +160,7 @@ pqx22
 println(calcdetails_qmax)
 ```
 
-### ULS SLIDING CHECK
+## ULS sliding check
 
 ```{julia}
 str_out = check_sliding(filepathname, raft, backfill, foundation, uls_cases, isZup=true,
@@ -544,11 +171,12 @@ str_out = check_sliding(filepathname, raft, backfill, foundation, uls_cases, isZ
 println(str_out)
 ```
 
-### moment diagram
+## moment diagram
+
 ```{julia}
 p11, p22, stro = check_bending_diagram_raft(filepathname, raft, backfill, uls_cases,
     ; isZup=true,
-    isULS=true,
+     ψG=1.2,
     isIgnoreMinAst=true,
     isFrustumVol=true)
 p22
@@ -562,17 +190,17 @@ p11
 display(println(stro))
 ```
 
-### Shear Diagram
+## Shear Diagram
 
 ```{julia}
 plot_v = check_shear_diagram(raft, backfill, uls_cases,
     ; filePathName=filepathname,
     isZup=true,
-    isULS=true,
+     ψG=1.2,
     isFrustumVol=false)
 ```
 
-### Punching Shear
+## Punching Shear
 
 ```{julia}
 str_o = check_punching(raft, uls_cases, ; isZup=true, filepathname=filepathname)
@@ -580,160 +208,9 @@ println(str_o)
 ```
 
 
-### Pedestal beam shear
+## Pedestal beam shear
 
 ```{julia}
-str = check_pedestal(filepathname, raft, uls_cases, ; isZup=true)
+str = check_pedestal_shear(filepathname, raft, uls_cases, ; isZup=true)
 println(str)
 ```
-
-### MTO, for comparison
-
-```{julia}
-Vol_strip = raft.volume
-```
-
-## FOOTING - STRIP OPTION (B2 => y-axis)
-
-### Load combinations, ignore wind-x
-
-```{julia}
-uls_cases = vcat(101:129, 131, 133:141, 143, 145:199) #uls cases
-permissible_cases = vcat(401:401) # PERMISSIBLE cases
-```
-
-### Foundation parameters
-
-```{julia} 
-# pedestal size
-c1 = 0.60m
-
-# footing slab length, axis-1, 2 direction 
-sp = 3.32m
-ae = 0.7m
-B2 = sp + 2 * ae
-B1 = 1.4m
-
-D = rc_slab.D
-Df = 9040mm - 8020mm # depth to footing underside
-hs = Df - D # height of soil overburden 
-hp = Df - D + 930mm # height of pedestal
-# pedestal location 
-e11 = -B2 / 2 + ae
-e12 = e11 + sp
-ped21 = CircularPedestal(p600, hp, 0.0m, e11, nodenum=1)
-ped22 = CircularPedestal(p600, hp, 0.0m, e12, nodenum=3)
-
-slab = FootingSlab(B1, B2, rc_slab);
-vped = [ped21, ped22]
-raft = RaftFootingRect(vped, slab, Df)
-plot(getFootingGeomVectors(raft), label="", aspect_ratio=:equal, size=(500, 500 / 1.6))
-```
-
-```{julia}
-#| echo: false
-#| output: false
-printlnstruct(raft)
-```
-
-
-### ULS BEARING PRESSURE
-
-```{julia}
-pqx11, pqx22, calcdetails_qmax = check_bearing_pressure(filepathname, raft, backfill, uls_cases,
-    isZup=true,
-    isULS=true,
-    isFrustumVol=true);
-pqx11
-```
-
-```{julia}
-pqx22
-```
-
-```{julia}
-println(calcdetails_qmax)
-```
-
-### PERMISSIBLE BEARING PRESSURE
-
-```{julia}
-pqx11, pqx22, calcdetails_qmax = check_bearing_pressure(filepathname, raft, backfill, permissible_cases,
-    isZup=true,
-    isULS=false,
-    isFrustumVol=false);
-pqx11
-```
-
-```{julia}
-pqx22
-```
-
-```{julia}
-println(calcdetails_qmax)
-```
-
-### ULS SLIDING CHECK
-
-```{julia}
-str_out = check_sliding(filepathname, raft, backfill, foundation, uls_cases, isZup=true,
-    isAdhesion=false,
-    Gext=0.0kN,
-    withPassive=true,
-    isFrustumVol=false);
-println(str_out)
-```
-
-### moment diagram
-```{julia}
-p11, p22, stro = check_bending_diagram_raft(filepathname, raft, backfill, uls_cases,
-    ; isZup=true,
-    isULS=true,
-    isIgnoreMinAst=true,
-    isFrustumVol=false)
-p22
-```
-
-```{julia}
-p11
-```
-
-```{julia} 
-display(println(stro))
-```
-
-### Shear Diagram
-
-```{julia}
-plot_v = check_shear_diagram(raft, backfill, uls_cases,
-    ; filePathName=filepathname,
-    isZup=true,
-    isULS=true,
-    isFrustumVol=false)
-```
-
-### Punching Shear
-
-```{julia}
-str_o = check_punching(raft, uls_cases, ; isZup=true, filepathname=filepathname)
-println(str_o)
-```
-
-
-### Pedestal beam shear
-
-```{julia}
-str = check_pedestal(filepathname, raft, uls_cases, ; isZup=true)
-println(str)
-```
-
-### MTO, for comparison
-
-```{julia}
-Vol_strip2 = raft.volume
-```
-
-
-# Appendix A{-}
-
-
