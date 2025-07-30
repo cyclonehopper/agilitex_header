@@ -17,7 +17,7 @@ format:
     include-in-header: julia/header.tex
     filters:
       - julia/revision-filter.lua
-    monofont: Julia Mono
+    monofont: JuliaMono
     monofontoptions: "Scale=0.75"
     papersize: A4
 
@@ -25,7 +25,7 @@ header-includes:
   - \def\companyName{Agilitus Qld}
   - \def\logoCompany{C:/Users/Josua/Juliarepo/agilitex_header/images/logo-agilitus.png}
   - \def\client{IPL Phosphate Hill}
-  - \def\logoClient{images/logo-ipl.png}
+  - \def\logoClient{images/logo-client.png}
   - \def\projNo{24177}
   - \def\projTitle{IPL Steam Boiler Study FEL1}
   - \def\calcNumber{24177-ST-CAL-0001}
