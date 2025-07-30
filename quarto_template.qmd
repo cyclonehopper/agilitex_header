@@ -33,6 +33,12 @@ header-includes:
   - \def\projPhase{Concept Design} 
 
 revisions:
+  - revNo: 
+    revDate:  
+    revDesc:  
+    revAuthor:  
+    revCheck:  
+    revApp: 
   - revNo: A
     revDate: 15/01/25
     revDesc: IFIR
@@ -176,7 +182,7 @@ using MyUnits, MyHelper, WindLoadModule, SeismicLoadModule, FootingModule, Concr
 ## Chem anchor/base plate design
 
 ```{=latex}
-\includepdf[pages=-]{pdf-to-embed/chemset.pdf}
+\includepdf[pages=-, fitpaper=true, rotateoversize=true]{pdf-to-embed/chemset.pdf}
 ```
 
 {{< pagebreak >}}
