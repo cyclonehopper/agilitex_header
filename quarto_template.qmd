@@ -4,7 +4,7 @@ execute:
   cache: true
 
 julia: 
-  exeflags: ["--project=."]    
+  exeflags: ["--project=@."]    
   
 
 mainfont: Lato
@@ -24,12 +24,12 @@ format:
 header-includes:
   - \def\companyName{Agilitus Qld}
   - \def\logoCompany{C:/Users/Josua/Juliarepo/agilitex_header/images/logo-agilitus.png}
-  - \def\client{IPL Phosphate Hill}
+  - \def\client{Client}
   - \def\logoClient{images/logo-client.png}
-  - \def\projNo{24177}
-  - \def\projTitle{IPL Steam Boiler Study FEL1}
-  - \def\calcNumber{24177-ST-CAL-0001}
-  - \def\calcTitle{Donkey Boiler}
+  - \def\projNo{25xxx}
+  - \def\projTitle{Title}
+  - \def\calcNumber{25xxx-ST-CAL-000y}
+  - \def\calcTitle{calc title}
   - \def\projPhase{Concept Design} 
 
 revisions:
