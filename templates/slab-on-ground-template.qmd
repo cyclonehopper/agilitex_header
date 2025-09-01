@@ -1,0 +1,478 @@
+---
+title: SLAB CHECK - PART 2 OF 2
+format:
+  engformat-typst:
+    company: BG&E Resources QLD 
+    proj_no: 24274 
+    calc_no: 24274-ST-CAL-0002
+    proj_title: Mezzanine Floor and Slab Check
+    client: Dyno Nobel
+    proj_phase: Detailed Design
+    # provide logos for the company (top LHS of header) and optionally the client (top RHS)
+    # Note that using _ in the file names appears to give errors.
+    logo_company: "images/logo-bger.png"
+    # logo_client:  "images/logo-client.png"
+
+    # provide a list of revisions, in descedending order (e.g. add new revisions at the bottom)
+    revisions:
+    - rev_no: A
+      rev_date: 16/01/25
+      rev_desc: IFIR
+      rev_prep: JOSUA A.
+      rev_check: K. KOOPS
+      rev_app: 
+    - rev_no: 0
+      rev_date: 05/02/25
+      rev_desc: ISSUED FOR USE
+      rev_prep: JOSUA A.
+      rev_check: K. KOOPS
+      rev_app: K. KOOPS
+engine: julia 
+julia: 
+  exeflags: ["--project=@."] 
+  env: ["QUARTO_JULIA_PROJECT=@."]
+code-overflow: wrap
+#execute:
+#  daemon: false
+---
+```{julia}
+#| echo: false
+#| output: false
+using Pkg
+```
+
+```{julia} 
+#| echo: false
+#| output: false
+Pkg.activate(".")
+using Unitful, DataFrames, XLSX, Plots, Unitful.DefaultSymbols, Revise
+using MyUnits, ConcreteModule, MyHelper
+# PackageSpec(path=raw"C:\\Users\\Josua\\Juliarepo\\MyUnits/") 
+
+```
+
+```{=typst}
+#like_header("Calculation Objective / Scope")
+```
+
+- To check the existing slab to support 6 Portalift lifting a 23Tonne multiple processing unit (MPU).
+- To check the existing slab to support the Mezzanine column loads. 
+- To provide minimum design thicknesses and reinforcement, as maybe required, to meet the design loads in case the existing does not meet the design loads or that the existing slab informations are not readily available
+
+
+```{=typst}
+#like_header("Calculation Assumptions")
+```
+
+Refer @sec-assumptions
+
+```{=typst}
+#like_header("Software Used")
+```
+
+-   RFEM
+-   Quarto/Julia for documentation
+-    
+
+```{=typst}
+#like_header("Holds")
+```
+
+- N/A
+
+{{< pagebreak >}}
+
+```{=typst}
+#block(above: 2em, below: 2em)[
+    #outline(
+      title: [Table of Contents],
+      depth: 2,
+      indent: auto
+    );
+    ]
+```
+{{< pagebreak >}}
+
+# Introduction {#sec-intro} 
+
+
+Dyno Nobel engaged BGER Qld to conduct an analytical check of the existing slab to be used as a maintenance floor.  The slab is to support a series of Portalift to lift an MPU with a gross weight of 23Tonnes. As advised by the client, 6 portalift will be used, with a maximum load of 4Tonnes.
+
+The same slab is also supporting the columns that supports a mezzanine floor to be used as a workshop floor.  The mezzanine floor was also checked, refer 24177-ST-CAL-0001 for the column reactions to be used in checking the slab.
+
+This calculation presents the results of the analytical check of the slab.  For the analytical check of the mezzanine floor and columns, refer 24177-ST-CAL-0001.
+
+## Exclusions
+
+
+  - Calculation of loads transmitted to the base of the Portalift.  It was provided by the client.
+  - Geotechnical analysis of the subgrade
+
+
+## Basis of Design
+
+
+In general, concrete design is in accordance with AS 3600.  For unreinforced industrial floors, design is carried in accordance with CCAA T48-2009.
+
+## Design Standards and Codes
+
+
+Unless specifically noted, the design complies with Australian Standards. The following summarises the key standards used in producing this
+calculation:
+
+  -   AS 1170.0 - 2002 Structural design actions - Part 0: General principles
+  -   AS 1170.1 - 2002 Structural design actions - Part 1: Permanent, imposed and other actions
+  -   AS 1170.2 - 2021 Structural design actions - Part 2: Wind actions
+  -   AS 3600 - 2018 Concrete structures
+  -   CCAA T48-2009 Guide to Industrial Floors and Pavements, design, construction and specfication 
+
+
+## Other Reference Documents
+
+
+  1. [24177-ST-CAL-0001  -  Structural Analysis of Mezzanine Floor.]{#item1}
+  2. [Portalift Operator Manual Version 010510 (steel wheel)]{#item2}
+  3. [TR34 - Concrete Industrial Ground Floors  - A guide to design and  construction]{#item3}
+
+{{< pagebreak >}}
+
+# Assumptions {#sec-assumptions}
+
+## MPU vehicle
+
+  - Vehicle GVW = 23Tonnes
+  - Tandem axle spacing  = 1200mm
+  - Track width = 1800mm
+  - Loads equally distributed between axles
+
+## Slab Supporting the Portalift
+
+  - Number of portalift cycles is taken as
+    - design life 25 years *  4 lifts per day = 36500.
+  - Concrete grade is 32Mpa
+  - Soil CBR = 10
+
+## Slab supporting the column of mezzanine floor
+
+  - Allowable bearing pressure corresponding to CBR=10 is 130kPa
+  - Reinforcement grade 500.
+
+{{< pagebreak >}}
+
+# Methodology
+
+
+SLab design is carried out by manual calculation using T48 and FEA. The use of FEA in calculating the design action is required as the manual method cannot account for the irregularity of load positions. 
+
+The slab (plain concrete, UNO) capacity will be calculated in accordance with CCAA T48-2009. For reinforced concrete option, capacity will be calculated in accordance with AS 3600.
+
+# Design of Portalift Slab
+
+## Soil subgrade conditions (assumed)
+
+![Approximate correlations of soil bearing and CBR](https://i.imgur.com/zcnZSZZ.png){#fig-cbr}
+
+soil parameters will be assume to have a CBR of 10. The allowable bearing and modulus of subgrade reaction, Ks, are estimated from @fig-cbr and shown below.
+
+```{julia}
+Hsoil = 3m  # soil thickness
+CBR = 10
+q_all = 130kPa
+Ks = 200psi / inch |> kPa / mm |> f2  # modulus of subgrade reaction for FEA model of subsoil.
+```
+
+![Figure 1.24 Correlation between long term Young's modulus and CBR](https://i.imgur.com/vlHfMua.png){#fig-1.24 width="350"}
+
+From @fig-1.24, the long term Young's modulus is given below.
+```{julia}
+νc = 0.33
+Esl = fEsl(CBR) |> f2
+```
+
+![Table 1.18 Typical Values of Young's modulus - infommrative
+only](https://i.imgur.com/x3tWuTj.png){width="554"}
+
+![](https://i.imgur.com/E3sjwiF.png){#fig-beta width="350"}
+
+![Typical Valuesof Poissons ratio](https://i.imgur.com/76Ds4HW.png){width="350"}
+
+From @fig-beta, for predominantly sandy soil, short term Young's modulus given below.
+
+```{julia}
+β = 0.8
+Ess = Esl / β |> f2
+```
+
+## Post load
+
+load repititions, assume design life 25yrs, 4 lift cycle a day
+```{julia}
+ncycles = 25 * 365 * 4
+```
+
+23t Vehicle, 6 Portalift, 4 Tonnes per portalift.
+
+
+## Concrete strength
+For use in FEA analysis later in the calculation. 
+
+![Table 1.16 Material Factor,
+k1](https://i.imgur.com/kO2Ls84.png){width="330"}
+
+![Table 1.17 Load repetition factor,
+K2](https://i.imgur.com/VpFt84o.png){width="326"}
+
+```{julia}
+fc = 32MPa # concrete grade
+k1 = 0.75 # post loading factor
+k2 = fk2(ncycles)  # factor for load repititions
+```
+
+```{julia}
+f_all, notes = fF1(k1, k2, fc)
+println(notes)
+```
+
+{{< pagebreak >}}
+
+## Scenario 1 - 6 Equal loads, isolated Hoist
+
+![Portalift loads](images/portalift-loads.png){#fig-wheel_load} 
+
+calculate wheel load, distribution per @fig-wheel_load 
+
+```{julia}
+Phoist = 23Tonnef / 4 |> kN |> f2
+γload_wheel = upreferred(33.1kN / 7500kgf)
+Ppost = Phoist * (1 - 2 * γload_wheel) / 2
+# 2*Ppost + 2*Pwheel
+```
+
+The portion of loads that goes to the hoist column can be ignored, and all hoisted load goess to the two steel wheels.
+ 
+Wheel spacing
+```{julia}
+s_wheel = 1070mm
+```
+
+
+Determine slab thickness
+
+![Axle loads - interior
+loading](https://i.imgur.com/dXKi9cP.png){width="400"}
+
+```{julia}
+#| echo: false
+tslab, notes = fdesign_slab_interior(Paxle=Phoist, k1=k1, k2=k2, fc=fc, Ess=Ess, tread=s_wheel, Hsoil=Hsoil, isWheelLoad=false)
+tslab_interior = roundto(tslab, 50mm)
+println(notes)
+```
+
+
+## Scenario 2 - tandem axle - 2 Portalifts close to each other
+
+Design verification by FEA. The slab in the model is 200mm thick.
+
+![](images/rfem-tensile-stresses.png){#fig-tensile-stresses}
+
+From @fig-tensile-stresses, the maximum principal tensile stress is 1.76MPa, less than the limit of `{julia} f_all`
+
+# Design of slab for vehicle access
+
+for vehicle maintenance, assume 1 vehicle per day passing through a certain point in slab.  Load on slab will be
+```{julia}
+n_axles = 3
+ncycles_axle_load = n_axles * 1 * 365 * 25
+```
+
+```{julia}
+k1_axle = 0.9
+k2_axle = fk2(ncycles_axle_load)
+```
+
+## For interior slab
+```{julia}
+#| echo: false
+tslab_vehicle_access, notes = fdesign_slab_interior(Paxle=8Tonnef, k1=k1_axle, k2=k2_axle, fc=fc, Ess=Ess, tread=1200mm, Hsoil=Hsoil, isWheelLoad=true)
+# tslab_interior_vehicle_access = roundto(tslab_vehicle_access, 50mm)
+println(notes)
+```
+
+The thickness requirements for vehicle access is less than that of the portalift.
+
+
+## For edge thickening - 300 thick, 300 wide (interior thickness being 200)
+
+need to calculate the wheel loads, assume 295/80R22.5 tires
+
+```{julia}
+p_tire = 100psi
+b_tire = 295mm * 2 # dual tire
+Paxle = 8Tonnef
+l_load = Paxle / 2 / (p_tire * b_tire) |> mm |> f2
+b_tire, l_load, p_tire |> kPa |> f2
+```
+
+![Wheel loads - at edge](images/wheel-loads-vehicle-access-slab-edge.png){width="350"}
+
+Design for bottom bars, fatigue check of reo, considering typical edge thickening of 300 thick, 300 wide,  with nominal 2-N12 bottom reinforcement and SL102 top reinforcement
+
+![Design bending moment](images/rfem-vehicle-access-edge-moment-fatigue.png){#fig-design-moment-edge-vehicle-access-fatigue}
+
+```{julia}
+b = 300mm
+db = 12mm # nominal bottom bar 2-N12
+D = 300mm
+cover = 50mm
+d = D - cover - 0.5 * db
+Abt = π / 4 * (9.7mm)^2 # top reo, SL002
+Abb = π / 4 * db^2 # bottom reo
+
+slab = AS3600RectSection(; fc=fc, fy=500MPa, b=b, d=d, D=D, nbt=2, nbb=2, Abt=Abt, Abb=Abb);
+struct_to_dict(slab)
+```
+
+```{julia}
+#| echo: false
+#| output: false
+slab.concrete_section.plot_section(filename="images/slab-section-plot.png");
+```
+
+![Concrete section](images/slab-section-plot.png){width="280"}
+
+
+Refer @fig-design-moment-edge-vehicle-access-fatigue for fatigue design moment
+
+```{julia}
+res = fdesign_fatigue(; sec=slab,
+    Mufat=1.1 * 28kN * m / m * 0.3m, # from FEA model
+    nsc=ncycles_axle_load,
+    steel_category="A");
+res[1] |> println
+```
+
+
+Checking for top reo
+
+![Design bending moment - top rebar](images/rfem-vehicle-access-edge-moment-top.png){#fig-design-moment-top-edge-vehicle-access}
+
+```{julia}
+res = fdesign_fatigue(; sec=slab, θ=180°,
+    Mufat=1.1 * 19.4kN * m / m * 0.3m, # from FEA model
+    nsc=ncycles_axle_load,
+    steel_category="A");
+res[1] |> println
+```
+
+checking interior slab next to the edge thickening to ensure flexural stresses not exceeded.
+
+![Flexural tensile stresses - interior slab next to edge](images/rfem-tensile-stresses-interior-slab-edge-loading.png){#fig-tensile-stresses-edge-loading}
+
+From @fig-tensile-stresses-edge-loading, the maximum stress is 1.0MPa < `{julia} f_all` allowable limit.
+
+
+# Design of lab Supporting Mezzanine Column
+
+## Column Load
+
+Refer 24177-ST-CAL-0001 for details of load calculations.  
+
+![SG model reaction - Working load](images/sg-column-working-load.png){#fig-working-load}
+
+From @fig-working-load, the combined reaction of the post is 
+
+```{julia}
+P_post = 35 * 2kN;
+s_post = 3.76m
+```
+
+## Minimum interior slab thickness
+
+![Post Loads - Interior.Edge loading](images/chart1.3.png)
+
+```{julia}
+#| echo: false
+tslab, notes = fdesign_tslab_post(P_post, fc, k1, Esl, s_post, Hsoil, isInterior=true, k2=1)
+# tslab_interior = roundto(tslab, 50mm)
+println(notes)
+```
+
+
+## Minimum edge slab thickness
+
+```{julia}
+#| echo: false
+tslab_edge, notes = fdesign_tslab_post(P_post, fc, k1, Esl, s_post, Hsoil, isInterior=false, k2=1)
+# tslab_interior = roundto(tslab, 50mm)
+println(notes)
+```
+
+
+## Width of edge thickening{#sec-width-edge} 
+
+The width of edge thickening is taken as the radius of relative stiffness as discuseed in TR34.
+
+```{julia}
+#| echo: false
+b_edge_thickening = fLr(fc=fc, tslab=tslab_edge, νc=νc, Ks=Ks) |> mm |> f2
+println("Minimum width of edge thickening = $b_edge_thickening")
+```
+
+
+Using FEA, the minimum required shall be 340mm thick and width of 1100, plain concrete design.
+
+![Flexural tensile stress ratio](images/RFEM-edge-model-stress-ratio.png)
+
+
+## Reinforced edge thickening
+
+Considering typical edge thickening of 300 wide, 300 thick, with nominal N12 reinforcement
+
+```{julia}
+b = 300mm
+D = 300mm
+n = 2
+db = 12mm
+d = D - 50mm - db
+
+slab = AS3600SinglyReinforcedBeam(; fc=32MPa, fy=500MPa, b, d, D, n, db, isFooting=true)
+
+ϕMn, notes = fbeam_design_singly_reinf(; beam=slab, isIgnoreMinAst=false)
+println(notes)
+```
+
+![Design bending moment](images/rfem-edge-reinforce-design-action.png){#fig-design-moment}
+
+From @fig-design-moment, the maximum moment Mu = 72kN/m * 0.3m = 22kN*m < `{julia} ϕMn |> f2 `, OK.
+
+{{< pagebreak >}}
+
+## Critical bearing pressure, edge thickening
+
+![Bearing pressure at edge, reinforced design](images/rfem-edge-reinforce-design-bearing.png){#fig-bearing}
+
+From @fig-bearing, the maximum is 65kPa, less than allowable of `{julia} q_all |> f2`
+
+{{< pagebreak >}}
+
+# Summary and Conclusion
+
+Based on the foregoing, the following concept design is deemed to satisfy the design requirements
+
+  - Portalift Slab, interior
+    - The minimum slab design thickness shall be 200mm, provided the underlying assumptions regarding the soil subgrade and concrete grade is confirmed.
+    - With nominal shrinkage reinforcement of SL102.
+
+  - Vehicle access slab
+    - The minimum interior thickness is less than that for portalift. Use portalift design.
+    - The minimum edge thickness shall be 300mm, 300mm wide, with SL102 top reinforcement, 2-N12 bottom reinforcement or equivalent.
+
+  - Mezzanine Column Slab, reinforced concrete design per AS3600
+    - The minimum interior slab thickness shall be 160 mm, with nominal shrinakge reinforcement of SL92.
+    - The minimum edge thickening shall be 300 mm thick, 300 wide, with nominal 2-N12 bottom reinforcement, and SL92 top reinforcement, or equivalent.
+
+# Recommendations
+
+- Conduct x-ray testing of interior and edges of slab to determine thickness and  the reinforcement.
+- Conduct core testing of concrete slab to determine compressive strength.
+
