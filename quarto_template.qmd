@@ -20,7 +20,9 @@ format:
     monofont: JuliaMono
     monofontoptions: "Scale=0.75"
     papersize: A4
-
+crossref: 
+    chapters: true
+    fig-title: Fig.
 header-includes:
   - \def\companyName{Agilitus Qld}
   - \def\logoCompany{C:/Users/Josua/Juliarepo/agilitex_header/images/logo-agilitus.png}
@@ -42,7 +44,7 @@ revisions:
   - revNo: A
     revDate: 15/01/25
     revDesc: IFIR
-    revAuthor: JOSUA A.
+    revAuthor: Josua A.
     revCheck: x.y.
     revApp: 
 ---
