@@ -124,18 +124,12 @@ foundation = Soil_AS4678(γs, ϕsoilbase, ϕn, ϕd, ϕuϕ);
 ```
 
 
-## ULS bearing pressure
+## ULS bearing pressure 
 
 ```{julia}
-pqx11, pqx22, calcdetails_qmax = check_bearing_pressure(filepathname, raft, backfill, uls_cases,
-    isZup=true,
-    ψG=0.9,
-    isFrustumVol=true);
-pqx11
-```
+res = fraft_global_analysis(filepathname, uls_cases, raft, backfill, ψG=0.9, isZup=false, isFrustumVol=true)
 
-```{julia}
-pqx22
+check_bearing_from_results(res, raft, uls_cases)
 ```
 
 ```{julia}
