@@ -7,6 +7,12 @@
 \usepackage{graphicx}
 \usepackage{afterpage}
 \usepackage{tabularx}
+\usepackage{titlesec}
+
+% Redefine chapter format to look like a section and remove page breaks
+\titleclass{\chapter}{top}
+\titleformat{\chapter}{\Large\bfseries}{\thechapter.}{1em}{}
+\titlespacing*{\chapter}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
 
 % Set page geometry for whole document
 \geometry{
@@ -111,4 +117,3 @@
     \noindent\rule{\textwidth}{1pt}
     \vspace{-0.3cm}
   }
-

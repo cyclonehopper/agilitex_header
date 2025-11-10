@@ -3,26 +3,28 @@ execute:
   daemon: 3600
   cache: true
 
-julia: 
-  exeflags: ["--project=@."]    
-  
+julia:
+  exeflags: ["--project=@."]
+
 
 mainfont: Lato
 fontsize: 11pt
 
 format:
   pdf:
-    pdf-engine: lualatex
-    number-sections: true 
+    documentclass: report
+    number-sections: true
+    number-depth: 2
+    crossref:
+      chapters: true
+      fig-prefix: "Figure"
     include-in-header: julia/header.tex
     filters:
       - julia/revision-filter.lua
     monofont: JuliaMono
     monofontoptions: "Scale=0.75"
     papersize: A4
-crossref: 
-    chapters: true
-    fig-title: Fig.
+    
 header-includes:
   - \def\companyName{Agilitus Qld}
   - \def\logoCompany{C:/Users/Josua/Juliarepo/agilitex_header/images/logo-agilitus.png}
@@ -32,21 +34,21 @@ header-includes:
   - \def\projTitle{Title}
   - \def\calcNumber{25xxx-ST-CAL-000y}
   - \def\calcTitle{calc title}
-  - \def\projPhase{Concept Design} 
+  - \def\projPhase{Concept Design}
 
 revisions:
-  - revNo: 
-    revDate:  
-    revDesc:  
-    revAuthor:  
-    revCheck:  
-    revApp: 
+  - revNo:
+    revDate:
+    revDesc:
+    revAuthor:
+    revCheck:
+    revApp:
   - revNo: A
     revDate: 15/01/25
     revDesc: IFIR
     revAuthor: Josua A.
     revCheck: x.y.
-    revApp: 
+    revApp:
 ---
 
 ```{=latex}
@@ -57,20 +59,20 @@ revisions:
 
 
 ```{=latex}
-\coverpageHeader{Calculation Assumptions} 
+\coverpageHeader{Calculation Assumptions}
 ```
 - Soil spring based on 150kPa/20mm stiffness
 
 ```{=latex}
-\coverpageHeader{Software Used} 
+\coverpageHeader{Software Used}
 ```
 * RFEM
 
 ```{=latex}
-\coverpageHeader{Holds} 
-``` 
+\coverpageHeader{Holds}
+```
 
-* n/a 
+* n/a
 
 
 {{< pagebreak >}}
@@ -132,7 +134,7 @@ Other reference documents used in this design include:
 -   n/a
 
 ## Assumptions {#sec-assumptions}
- 
+
 -   Differential displacement between adjacent jacking point is must be < L/600
 -   centerline of jack is no more than 195mm from edge of bottom frame
 
@@ -156,8 +158,8 @@ Other reference documents used in this design include:
 #| output: false
 using Pkg
 Pkg.activate(".")
-# PackageSpec(path=raw"C:\\Users\\Josua\\Juliarepo\\MyUnits/") 
-``` 
+# PackageSpec(path=raw"C:\\Users\\Josua\\Juliarepo\\MyUnits/")
+```
 
 ```{julia}
 #| label: using
@@ -181,22 +183,47 @@ using MyUnits, MyHelper, WindLoadModule, SeismicLoadModule, FootingModule, Concr
 
 {{< pagebreak >}}
 
+## Pretty Tables
+
+Following table summarises the connection loads and capacities:
+
+```{julia}
+#| echo: false
+#| output: false
+dfConn = DataFrame(
+    Name=[c.name for c in vConn],
+    RL=[c.rl_location for c in vConn],
+    Axial_kN=[ustrip(u"kN", c.load_axial) for c in vConn],
+    Axial_cap=[ustrip(u"kN", c.cap_axial) for c in vConn],
+    Shear_kN=[ustrip(u"kN", c.load_shear) for c in vConn],
+    Shear_cap=[ustrip(u"kN", c.cap_shear) for c in vConn],
+    Moment_kNm=[ustrip(u"kN*m", c.load_moment) for c in vConn],
+    Moment_cap=[ustrip(u"kN*m", c.cap_moment) for c in vConn],
+    utilisation=[1 / c.cap_factor |> f2 for c in vConn])
+```
+
+
+```{julia}
+#| echo: false
+#| output: asis
+#|
+header = [["Connection", "Location", MultiColumn(2, "P (kN)"), MultiColumn(2, "V (kN)"), MultiColumn(2, "M (kNm)"), "Utilisation"],
+    [" ", "", "load", "capacity", "load", "capacity", "load", "capacity", " "]]
+pretty_table(
+    dfConn;
+    column_labels=header,
+    backend=:latex
+)
+```
+
 ## Chem anchor/base plate design
 
 ```{=latex}
 \includepdf[pages=-, fitpaper=true, rotateoversize=true]{pdf-to-embed/chemset.pdf}
 ```
 
-{{< pagebreak >}}
-
- ```{=latex }
- \appendixHeader{Appendix B}
- ``` 
-
-{{< pagebreak >}}
-
 
  ```{=latex }
 \appendixHeader{Appendix A  \\ Preliminary Pump Information}
 \addcontentsline{toc}{section}{Appendix A - Preliminary Pump Information}
- ``` 
+ ```
