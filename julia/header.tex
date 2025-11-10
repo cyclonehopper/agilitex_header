@@ -12,7 +12,8 @@
 % Redefine chapter format to look like a section and remove page breaks
 \titleclass{\chapter}{top}
 \titleformat{\chapter}{\Large\bfseries}{\thechapter.}{1em}{}
-\titlespacing*{\chapter}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+\titlespacing*{\chapter}{0pt}{0.2ex}{2.3ex plus .2ex}
+\assignpagestyle{\chapter}{fancy}
 
 % Set page geometry for whole document
 \geometry{
@@ -25,7 +26,7 @@
 }
 
 % Set header height
-\setlength{\headheight}{85pt}
+\setlength{\headheight}{65pt}
 
 % Ensure header occupies full width
 \setlength{\headwidth}{\textwidth}
