@@ -9,11 +9,7 @@
 \usepackage{tabularx}
 \usepackage{titlesec}
 
-% Redefine chapter format to look like a section and remove page breaks
-\titleclass{\chapter}{top}
-\titleformat{\chapter}{\Large\bfseries}{\thechapter.}{1em}{}
-\titlespacing*{\chapter}{0pt}{0.2ex}{2.3ex plus .2ex}
-\assignpagestyle{\chapter}{fancy}
+
 
 % Set page geometry for whole document
 \geometry{
@@ -26,7 +22,15 @@
 }
 
 % Set header height
-\setlength{\headheight}{65pt}
+\setlength{\headheight}{75pt}
+
+% Redefine chapter format to look like a section and remove page breaks
+\titleclass{\chapter}{top}
+\titleformat{\chapter}{\Large\bfseries}{\thechapter.}{1em}{}
+\titlespacing*{\chapter}{0pt}{1.0ex}{2.3ex plus .2ex}
+\titlespacing{\section}{0pt}{3.0ex}{2.5ex}
+\assignpagestyle{\chapter}{fancy}
+
 
 % Ensure header occupies full width
 \setlength{\headwidth}{\textwidth}
