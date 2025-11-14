@@ -24,7 +24,7 @@ format:
     monofont: JuliaMono
     monofontoptions: "Scale=0.75"
     papersize: A4
-    
+
 header-includes:
   - \def\companyName{Agilitus Qld}
   - \def\logoCompany{C:/Users/Josua/Juliarepo/agilitex_header/images/logo-agilitus.png}
@@ -74,6 +74,18 @@ revisions:
 
 * n/a
 
+<!-- reset the margins  -->
+```{=latex}
+\newgeometry{
+    a4paper,
+    top=15mm,
+    bottom=15mm ,
+    left=15mm,
+    right=15mm,
+    includeheadfoot
+}
+\afterpage{\restoregeometry}
+```
 
 {{< pagebreak >}}
 
