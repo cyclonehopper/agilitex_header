@@ -18,6 +18,7 @@ format:
     crossref:
       chapters: true
       fig-prefix: "Figure"
+      sec-prefix: "Section"
     include-in-header: julia/header.tex
     filters:
       - julia/revision-filter.lua
