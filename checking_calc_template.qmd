@@ -1,0 +1,117 @@
+---
+execute:
+  daemon: 3600
+  cache: true
+
+julia:
+  exeflags: ["--project=@."]
+
+
+mainfont: Lato
+fontsize: 11pt
+
+format:
+  pdf:
+    documentclass: report
+    number-sections: true
+    number-depth: 2
+    crossref:
+      chapters: true
+      fig-prefix: "Figure"
+      sec-prefix: "Section"
+    include-in-header: header/header.tex
+    filters:
+      - header/revision-filter.lua
+    monofont: JuliaMono
+    monofontoptions: "Scale=0.75"
+    papersize: A4
+
+header-includes:
+  - \def\companyName{Agilitus Qld}
+  - \def\logoCompany{C:/Users/Josua/Juliarepo/agilitex_header/images/logo-agilitus.png}
+  - \def\client{Client}
+  - \def\logoClient{images/logo-client.png}
+  - \def\projNo{25xxx}
+  - \def\projTitle{Title}
+  - \def\calcNumber{25xxx-ST-CAL-000y}
+  - \def\calcTitle{Engineering check calculation}
+  - \def\projPhase{Detailed Design}
+
+revisions:
+  - revNo:
+    revDate:
+    revDesc:
+    revAuthor:
+    revCheck:
+    revApp:
+  - revNo: A
+    revDate: 15/01/25
+    revDesc: IFIR
+    revAuthor: Josua A.
+    revCheck: x.y.
+    revApp:
+---
+
+```{=latex}
+\coverpageHeader{Calculation Objective / Scope}
+```
+* n/a
+
+
+```{=latex}
+\coverpageHeader{Calculation Assumptions}
+```
+- n/a
+
+```{=latex}
+\coverpageHeader{Software Used}
+```
+* SG
+
+```{=latex}
+\coverpageHeader{Holds}
+```
+
+* n/a
+
+<!-- reset the margins  -->
+```{=latex}
+\newgeometry{
+    a4paper,
+    top=15mm,
+    bottom=15mm ,
+    left=15mm,
+    right=15mm,
+    includeheadfoot
+}
+\afterpage{\restoregeometry}
+```
+
+{{< pagebreak >}}
+
+<!-- add TOC using latex -->
+```{=latex}
+\tableofcontents
+```
+
+{{< pagebreak >}}
+ 
+
+```{julia}
+#| label: activate
+#| echo: false
+#| output: false
+using Pkg
+Pkg.activate(".")
+# PackageSpec(path=raw"C:\\Users\\Josua\\Juliarepo\\MyUnits/")
+```
+
+```{julia}
+#| label: using
+#| echo: false
+#| output: false
+using Unitful, DataFrames, XLSX, Plots, Unitful.DefaultSymbols, Revise
+using MyUnits, MyHelper, WindLoadModule, SeismicLoadModule, FootingModule, ConcreteModule
+```
+
+# RFEM MODEL OF JACKING PLATES

@@ -19,9 +19,9 @@ format:
       chapters: true
       fig-prefix: "Figure"
       sec-prefix: "Section"
-    include-in-header: julia/header.tex
+    include-in-header: header/header.tex
     filters:
-      - julia/revision-filter.lua
+      - header/revision-filter.lua
     monofont: JuliaMono
     monofontoptions: "Scale=0.75"
     papersize: A4
