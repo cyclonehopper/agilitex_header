@@ -1,11 +1,24 @@
 ---
-execute:
-  daemon: 3600
-  cache: true
+client: Some client
+proj_number: 25xxx
+proj_title: Some project title
+cal_number: -ST-CAL-000Y
+cal_title: Calculation title
+proj_phase: Concept Design
 
-julia:
-  exeflags: ["--project=@."]
-
+revisions:
+  - revNo:  
+    revDate: 
+    revDesc: 
+    revAuthor: 
+    revCheck: 
+    revApp:
+  - revNo: A
+    revDate: 15/01/25
+    revDesc: IFIR
+    revAuthor: Josua A.
+    revCheck: x.y.
+    revApp:
 
 mainfont: Lato
 fontsize: 11pt
@@ -25,31 +38,23 @@ format:
     monofont: JuliaMono
     monofontoptions: "Scale=0.75"
     papersize: A4
+execute:
+  daemon: 3600
+  cache: true
+
+julia:
+  exeflags: ["--project=@."]
 
 header-includes:
   - \def\companyName{Agilitus Qld}
   - \def\logoCompany{C:/Users/Josua/Juliarepo/agilitex_header/images/logo-agilitus.png}
-  - \def\client{Client}
+  - \def\client{ {{< meta client >}} }
   - \def\logoClient{images/logo-client.png}
-  - \def\projNo{25xxx}
-  - \def\projTitle{Title}
-  - \def\calcNumber{25xxx-ST-CAL-000y}
-  - \def\calcTitle{calc title}
-  - \def\projPhase{Concept Design}
-
-revisions:
-  - revNo:
-    revDate:
-    revDesc:
-    revAuthor:
-    revCheck:
-    revApp:
-  - revNo: A
-    revDate: 15/01/25
-    revDesc: IFIR
-    revAuthor: Josua A.
-    revCheck: x.y.
-    revApp:
+  - \def\projNo{ {{< meta proj_number >}} }
+  - \def\projTitle{ {{< meta proj_title >}} }
+  - \def\calcNumber{ {{< meta proj_number >}} {{< meta cal_number >}} }
+  - \def\calcTitle{ {{< meta cal_title >}} }
+  - \def\projPhase{ {{< meta proj_phase >}} }
 ---
 
 ```{=latex}
@@ -169,8 +174,8 @@ Other reference documents used in this design include:
 #| label: activate
 #| echo: false
 #| output: false
-using Pkg
-Pkg.activate(".")
+# using Pkg
+# Pkg.activate(".")
 # PackageSpec(path=raw"C:\\Users\\Josua\\Juliarepo\\MyUnits/")
 ```
 
@@ -178,19 +183,12 @@ Pkg.activate(".")
 #| label: using
 #| echo: false
 #| output: false
-using Unitful, DataFrames, XLSX, Plots, Unitful.DefaultSymbols, Revise
-using MyUnits, MyHelper, WindLoadModule, SeismicLoadModule, FootingModule, ConcreteModule
+# using Unitful, DataFrames, XLSX, Plots, Unitful.DefaultSymbols, Revise
+# using MyUnits, MyHelper, WindLoadModule, SeismicLoadModule, FootingModule, ConcreteModule
 ```
 
 # RFEM MODEL OF JACKING PLATES
-
-```{julia}
-5m + 6m
-```
-
-```{julia}
-5kN + 6kN
-```
+ 
 
 ## Load - Self weight
 
@@ -203,16 +201,16 @@ Following table summarises the connection loads and capacities:
 ```{julia}
 #| echo: false
 #| output: false
-dfConn = DataFrame(
-    Name=[c.name for c in vConn],
-    RL=[c.rl_location for c in vConn],
-    Axial_kN=[ustrip(u"kN", c.load_axial) for c in vConn],
-    Axial_cap=[ustrip(u"kN", c.cap_axial) for c in vConn],
-    Shear_kN=[ustrip(u"kN", c.load_shear) for c in vConn],
-    Shear_cap=[ustrip(u"kN", c.cap_shear) for c in vConn],
-    Moment_kNm=[ustrip(u"kN*m", c.load_moment) for c in vConn],
-    Moment_cap=[ustrip(u"kN*m", c.cap_moment) for c in vConn],
-    utilisation=[1 / c.cap_factor |> f2 for c in vConn])
+# dfConn = DataFrame(
+#     Name=[c.name for c in vConn],
+#     RL=[c.rl_location for c in vConn],
+#     Axial_kN=[ustrip(u"kN", c.load_axial) for c in vConn],
+#     Axial_cap=[ustrip(u"kN", c.cap_axial) for c in vConn],
+#     Shear_kN=[ustrip(u"kN", c.load_shear) for c in vConn],
+#     Shear_cap=[ustrip(u"kN", c.cap_shear) for c in vConn],
+#     Moment_kNm=[ustrip(u"kN*m", c.load_moment) for c in vConn],
+#     Moment_cap=[ustrip(u"kN*m", c.cap_moment) for c in vConn],
+#     utilisation=[1 / c.cap_factor |> f2 for c in vConn])
 ```
 
 
@@ -220,13 +218,13 @@ dfConn = DataFrame(
 #| echo: false
 #| output: asis
 #|
-header = [["Connection", "Location", MultiColumn(2, "P (kN)"), MultiColumn(2, "V (kN)"), MultiColumn(2, "M (kNm)"), "Utilisation"],
-    [" ", "", "load", "capacity", "load", "capacity", "load", "capacity", " "]]
-pretty_table(
-    dfConn;
-    column_labels=header,
-    backend=:latex
-)
+# header = [["Connection", "Location", MultiColumn(2, "P (kN)"), MultiColumn(2, "V (kN)"), MultiColumn(2, "M (kNm)"), "Utilisation"],
+#     [" ", "", "load", "capacity", "load", "capacity", "load", "capacity", " "]]
+# pretty_table(
+#     dfConn;
+#     column_labels=header,
+#     backend=:latex
+# )
 ```
 
 ## Chem anchor/base plate design
