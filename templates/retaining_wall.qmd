@@ -210,7 +210,7 @@ LF_uls = LoadFactors(γDC=1.2,
 )
 
 # determine design actions to be used later.
-wall_actions_uls = [fWallStability(retwall, LF_uls; kh=kh) for retwall in retwalls_uls];
+wall_actions_uls = [fWallStability(retwall, LF_uls;) for retwall in retwalls_uls];
 ```
 
 ## Load combination case 1: Dead + Live loads + seismic:
@@ -251,7 +251,7 @@ Vu = [t.vy for t in res_vm]
 
 Mu_max, i_max = findmax(Mu)
 Vu_max = Vu[i_max]
-println(wall_actions_uls[i_max].calc_details)
+println(wall_actions_all[i_max].calc_details)
 ```
 
 ```{julia}
