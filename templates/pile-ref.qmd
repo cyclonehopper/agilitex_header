@@ -301,10 +301,9 @@ purlin summary:
 soil = HyperbolicSand(ϕi=30.0°, γ=18kN / m^3, Dr=40)
 pile2m = Pile(D=300mm, E=30000MPa, L=2.0m)
 
-fwrite_p_y_curves_csv(soil, pile2m; zstart=0.15m,
+get_pile_springs(soil, pile2m; zstart=0.15m,
     vy=2mm:2mm:20mm,
-    support_node_spacing=0.3m,
-    relativefilepathname="csv/pycurves.csv")
+    support_node_spacing=0.3m)
 ```
 
 ```{julia}
