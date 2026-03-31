@@ -169,29 +169,20 @@ str_out = check_sliding(filepathname, raft, backfill, foundation, uls_cases, isZ
 println(str_out)
 ```
 
-## moment diagram
+### Moment diagram
 
 ```{julia}
-calc_res, diagram_m = check_moment_diagram_from_results(vres::Vector{RaftAnalysisResult}, raft::RaftFootingRect, backfill::Soil_AS4678; ψG=0.9, isFrustumVol=false)
+calc_res, diagram_m = check_moment_diagram_from_results(res_bearing, raft, backfill; ψG=0.9, isFrustumVol=true, inc=0.01m, is_plot_all=true)
+diagram_m
 ```
+
+### Shear diagram
 
 ```{julia}
-p11
+calc_res, diagram_v = check_shear_diagram_from_results(res_bearing, raft, backfill; ψG=0.9, isFrustumVol=true, inc=0.01m, is_plot_all=true)
+diagram_v
 ```
 
-```{julia} 
-display(println(stro))
-```
-
-## Shear Diagram
-
-```{julia}
-plot_v = check_shear_diagram(raft, backfill, uls_cases,
-    ; filePathName=filepathname,
-    isZup=true,
-    ψG=1.2,
-    isFrustumVol=false)
-```
 
 ## Punching Shear
 
