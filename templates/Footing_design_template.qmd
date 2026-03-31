@@ -93,8 +93,8 @@ ped12 = RectanglePedestal(rc_sq500, hp, e12; nodenum=5)
 slab = FootingSlab(B1, B2, rc_slab);
 vped = [ped11, ped12]
 raft = RaftFootingRect(vped, slab, Df)
-fg=plot_footing_geom(raft)
-plot!(fg, aspect_ratio=:equal )
+fg = plot_footing_geom(raft)
+plot!(fg, aspect_ratio=:equal)
 # plot(getFootingGeomVectors(raft), label="", aspect_ratio=:equal, size=(500, 500 / 1.6))
 ```
 
@@ -127,13 +127,17 @@ foundation = Soil_AS4678(γs, ϕsoilbase, ϕn, ϕd, ϕuϕ);
 ## ULS bearing pressure 
 
 ```{julia}
-res = fraft_global_analysis(filepathname, uls_cases, raft, backfill, ψG=0.9, isZup=false, isFrustumVol=true)
+res = fraft_global_analysis(filepathname, uls_cases, raft, backfill, ψG=0.9, isZup=true, isFrustumVol=true,
+    e_lim_11=300mm,
+    e_lim_22=300mm)
 
-check_bearing_from_results(res, raft, uls_cases)
+calc_res, diagram = check_bearing_from_results(res, raft, uls_cases)
+println(calc_res.calc_details)
 ```
 
 ```{julia}
-println(calcdetails_qmax)
+#| echo: false
+diagram
 ```
 
 ## SLS bearing pressure
@@ -168,12 +172,7 @@ println(str_out)
 ## moment diagram
 
 ```{julia}
-p11, p22, stro = check_bending_diagram_raft(filepathname, raft, backfill, uls_cases,
-    ; isZup=true,
-     ψG=1.2,
-    isIgnoreMinAst=true,
-    isFrustumVol=true)
-p22
+calc_res, diagram_m = check_moment_diagram_from_results(vres::Vector{RaftAnalysisResult}, raft::RaftFootingRect, backfill::Soil_AS4678; ψG=0.9, isFrustumVol=false)
 ```
 
 ```{julia}
@@ -190,7 +189,7 @@ display(println(stro))
 plot_v = check_shear_diagram(raft, backfill, uls_cases,
     ; filePathName=filepathname,
     isZup=true,
-     ψG=1.2,
+    ψG=1.2,
     isFrustumVol=false)
 ```
 
