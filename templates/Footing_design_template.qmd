@@ -94,8 +94,6 @@ slab = FootingSlab(B1, B2, rc_slab);
 vped = [ped11, ped12]
 raft = RaftFootingRect(vped, slab, Df)
 fg = plot_footing_geom(raft)
-plot!(fg, aspect_ratio=:equal)
-# plot(getFootingGeomVectors(raft), label="", aspect_ratio=:equal, size=(500, 500 / 1.6))
 ```
 
 ```{julia}
