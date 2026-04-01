@@ -96,12 +96,6 @@ raft = RaftFootingRect(vped, slab, Df)
 fg = plot_footing_geom(raft)
 ```
 
-```{julia}
-#| echo: false
-#| output: false
-struct_to_dict(raft)
-```
-
 
 ## Soil parameters
 
