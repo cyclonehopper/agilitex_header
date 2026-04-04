@@ -90,7 +90,7 @@ e12 = e11 + sp
 ped11 = RectanglePedestal(rc_sq500, hp, e11; nodenum=1)
 ped12 = RectanglePedestal(rc_sq500, hp, e12; nodenum=5)
 
-slab = FootingSlab(B1, B2, rc_slab);
+slab = FootingSlab(B1, B2, D);
 vped = [ped11, ped12]
 raft = RaftFootingRect(vped, slab, Df)
 fg = plot_footing_geom(raft)
